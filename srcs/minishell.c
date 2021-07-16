@@ -7,33 +7,39 @@ void print_error(char *command, int my_error)
 	else
 		errno = -1;
 	if (my_error == -1)
-		printf("minishell: too much arguments\n");
+		write(2, "minishell: too much arguments\n", 61);
 	else if (my_error == -2)
-		printf("minishell: Too much command in one string\n");
+		write(2, "minishell: Too much command in one string\n", 42);
+	if (my_error == -3)
+		write(2, "minishell: syntax error near unexpected token `|'\n", 50);
+	if (my_error == -4)
+		write(2, "minishell: syntax error near unexpected token `||'\n", 51);
 	else if (my_error == 127)
-		printf("minishell: %s: command not found\n", command);
+		printf("minishell: %s: command not found\n", command);    // тут исправить вывод ошибки
 	else if (my_error == 1)
-		printf("minishell: Not valid\n");
+		write(2, "minishell: Not valid\n", 21);
 	else
 		return ;
 }
 
-void free_main(char **m_str,char **arguments)
+void init_errno(t_all *all)
 {
-	int i;
+	char **arguments;
+	char *error_my;
+	char *dollar;
 
-	i = 0;
-	if (m_str[0] != NULL)
-	{
-		free(m_str[0]);
-		while(arguments != NULL && arguments[i] != NULL)
-		{
-			free(arguments[i]);
-			i++;
-		}
-		if (arguments != NULL)
-			free(arguments);
-	}
+	dollar = malloc(3);
+	dollar[0] = '?';
+	dollar[1] = '=';
+	dollar[2] = '\0';
+	error_my = ft_itoa(errno);
+	dollar = ft_strjoin(dollar, error_my);
+	arguments = malloc(sizeof(char*) * 3);
+	arguments[0] = "hi\0";
+	arguments[1] = dollar;
+	arguments[2] = NULL;
+	add_variable(all->env, arguments);
+	errno = 0;
 }
 
 int main(int argc, char **argv, char **envp)
@@ -55,8 +61,8 @@ int main(int argc, char **argv, char **envp)
 	make_envp(all, envp);
 	while (TRUE)
 	{
-		errno = 0;		// ИСПРАВИТЬ так как при вызове команды $? предыдущее значение обнулится
-		free_main(&m_str, arguments);
+		init_errno(all);
+		free_main(&m_str, arguments, all);
 		m_str = readline("minishell: ");
 		if (m_str[0] == '\0')						// вывод ошибки чтения строки
 			continue ;
@@ -72,13 +78,24 @@ int main(int argc, char **argv, char **envp)
 			print_error(m_str, errno);
 			continue ;
 		}
+		////////////////////////
+		// t_lst_pipe *tmp;
+		// tmp = all->pipe;
+		// while(tmp->next)
+		// {
+		// 	printf("num%i : arg = %i, count pipe = %i\n", tmp->num, tmp->arg_p, tmp->f_pipe);
+		// 	tmp = tmp->next;
+		// }
+		// continue ;
+		////////////////////////
+
 		arguments = ft_split(m_str, ';');			// разделим команду на аргументы
 		i = 0;
 		while(arguments[i] != NULL)
 		{
-			// printf("до |%s|\n", arguments[i]);
+			// printf("до =%s\n", arguments[i]);
 			arguments[i] = cut_quote(arguments[i]);
-			// printf("после |%s|\n", arguments[i]);
+			// printf("после =%s\n\n", arguments[i]);
 			i++;
 		}
 

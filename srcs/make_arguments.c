@@ -7,12 +7,43 @@ char	*cut(char *arg, int *i)
 	int		j;
 	int		k;
 
+	// if (ft_strncmp(arg, "\"|\"", 3) == 0)
+	// {
+	// 	(*i) += 3;
+	// 	return (arg);
+	// }
+	// if (ft_strncmp(arg, "||", 2) == 0)
+	// {
+	// 	(*i) += 2;
+	// 	return (arg);
+	// }
+	// if (ft_strncmp(arg, ">", 1) == 0)
+	// {
+	// 	(*i)++;
+	// 	return (arg);
+	// }
+	// if (ft_strncmp(arg, ">>", 2) == 0)
+	// {
+	// 	(*i) += 2;
+	// 	return (arg);
+	// }
+	// if (ft_strncmp(arg, "<", 1) == 0)
+	// {
+	// 	(*i)++;
+	// 	return (arg);
+	// }
+	// if (ft_strncmp(arg, "<<", 2) == 0)
+	// {
+	// 	(*i) += 2;
+	// 	return (arg);
+	// }
+	
 	j = 0;
 	k = *i;
 	quot = arg[*i];
 	while(arg[++k] != quot && arg[k - 1] != '\\' && arg[k] != '\0')
 		j++;
-	str = (char *)malloc(sizeof(char) * j);     // "asd""asd" // "asd\"asd"
+	str = (char *)malloc(sizeof(char) * j);
 	j = 0;
 	while(arg[++(*i)] != quot && arg[(*i) - 1] != '\\' && arg[k] != '\0')
     {

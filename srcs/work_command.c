@@ -32,18 +32,28 @@ void	ft_env(t_env *env)
 	i = 0;
 	while (env->envp[i] != NULL)
 	{
-		if (env->f_equal[i] == 2)
-			printf("%s\n", env->envp[i]);
+		if (ft_strncmp(env->var[i], "?", ft_strlen("?")) != 0)
+			if (env->f_equal[i] == 2)
+				printf("%s\n", env->envp[i]);
 		i++;
 	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void	ft_cd(char **arguments)
+void	ft_cd(char **arguments, t_env *env)
 {
+	int i;
+
+	i = 0;
 	if (arguments[1] == NULL || !(strcmp(arguments[1], "~")))
-		chdir("/Users/fldelena/");								// в будущем сюда будет помещена переменная окружения HOME
+	{
+		while (ft_strncmp(env->var[i], "HOME", ft_strlen("HOME")) != 0)
+		{
+			i++;
+		}
+		chdir(env->val[i]);								// в будущем сюда будет помещена переменная окружения HOME
+	}	
 	else if (*(arguments + 1) != NULL)
 		chdir(arguments[1]);
 	if (errno != 0)
@@ -98,10 +108,13 @@ void	ft_export(t_env *env, char **arguments)
 		i = 0;
 		while (*(sort_envp + i))
 		{
-			printf("declare -x %s", sort_var[i]);
-			if (f_equal[i] == 2)
-				printf("=\"%s\"", sort_val[i]);
-			printf("\n");
+			if (ft_strncmp(sort_var[i], "?", ft_strlen("?")) != 0)
+			{
+				printf("declare -x %s", sort_var[i]);
+				if (f_equal[i] == 2)
+					printf("=\"%s\"", sort_val[i]);
+				printf("\n");
+			}
 			i++;
 		}
 		free_arr(sort_envp);
@@ -139,9 +152,9 @@ int	ft_exit(char **arguments)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 int ft_work_command(char **arguments, t_all *all)
 {
-	if (strcmp(arguments[0], "pwd") == 0)
+	if (ft_strncmp(arguments[0], "pwd", ft_strlen("pwd")) == 0)
 		printf("%s\n", getcwd(0,0));
-	if (strcmp(arguments[0], "ls") == 0)
+	if (ft_strncmp(arguments[0], "ls", ft_strlen("ls")) == 0)
 	{
 		pid_t pid;
 		pid = fork();
@@ -149,17 +162,17 @@ int ft_work_command(char **arguments, t_all *all)
 			execve("/bin/ls", arguments, 0);
 		waitpid(pid, 0, 0);
 	}
-	if (strcmp(arguments[0], "echo") == 0)
+	if (ft_strncmp(arguments[0], "echo", ft_strlen("echo")) == 0)
 		ft_echo(1, arguments);
-	if (strcmp(arguments[0], "cd") == 0)
-		ft_cd(arguments);
-	if (strcmp(arguments[0], "env") == 0)
+	if (ft_strncmp(arguments[0], "cd", ft_strlen("cd")) == 0)
+		ft_cd(arguments, all->env);
+	if (ft_strncmp(arguments[0], "env", ft_strlen("env")) == 0)
 		ft_env(all->env);
-	if (strcmp(arguments[0], "export") == 0)
+	if (ft_strncmp(arguments[0], "export", ft_strlen("export")) == 0)
 		ft_export(all->env, arguments);
-	if (strcmp(arguments[0], "unset") == 0)
+	if (ft_strncmp(arguments[0], "unset", ft_strlen("unset")) == 0)
 		ft_unset(all->env, arguments);
-	if (strcmp(arguments[0], "exit") == 0)		// gvenonat
+	if (ft_strncmp(arguments[0], "exit", ft_strlen("exit")) == 0)		// gvenonat
 		ft_exit(arguments);
 	return(0);
 }

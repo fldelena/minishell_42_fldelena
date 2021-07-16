@@ -1,6 +1,7 @@
 NAME		= libft.a
 
 SRCS =		ft_atoi.c \
+			ft_itoa.c \
 			ft_count_char.c \
 			ft_endline.c \
 			ft_isdigit.c \

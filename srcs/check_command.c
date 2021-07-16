@@ -180,6 +180,7 @@ static int ft_dollar(char **m_str, int *i, t_all *all)       // можно пе�
 
     l_dollar = 0;
     count = 0;
+    //if (ft_strncmp(m_str[]))
     if (m_str[0][*i] == '$')
     {
         (*i)++;
@@ -201,21 +202,65 @@ static int ft_dollar(char **m_str, int *i, t_all *all)       // можно пе�
     return (0);
 }
 
+static int ft_add_lst(t_all *all, int c_pip, int count)
+{
+    t_lst_pipe *tmp;
+    int num2;
+
+    if (c_pip > 3)
+        return (-4);
+    if (c_pip > 2)
+        return (-3);
+    num2 = 0;
+    tmp = all->pipe;
+    while(tmp->next != NULL)
+    {
+        num2++;
+        tmp = tmp->next;
+    }
+    tmp->num = num2;
+    tmp->f_pipe = c_pip;
+    tmp->arg_p = count;
+    tmp->next = malloc(sizeof(t_lst_pipe));
+    tmp = tmp->next;
+    tmp->next = NULL;
+    return (0);
+}
+
 int ft_check_command(char **m_str, t_all *all)
 {
     int i;
     int o_l_quote;
     int t_l_quote;
+    int count;
+    int c_pip;
 
+    count = 1;
     i = 0;
     o_l_quote = 0;
     t_l_quote = 0;
     while(m_str[0][i] != '\0')
     {
-        while(m_str[0][i] == ' ' || m_str[0][i] == '\t')
+        c_pip = 0;
+        while(m_str[0][i] == ' ' || m_str[0][i] == '\t' || m_str[0][i] == '|')
         {
             if (t_l_quote == 0 && o_l_quote == 0)
+            {
+                if (m_str[0][i] == '|')
+                {
+                    while(m_str[0][i] == '|')
+                    {
+                        c_pip++;
+                        i++;
+                    }
+                    count--;
+                    if (ft_add_lst(all, c_pip, count) != 0)
+                        return (ft_add_lst(all, c_pip, count));
+                }
                 m_str[0][i] = ';';
+                if (m_str[0][i - 1] != ';')
+                    count++;
+            }
             i++;
         }
         ft_first(*m_str, &t_l_quote, &o_l_quote, &i); // определяем кавычки
@@ -224,8 +269,7 @@ int ft_check_command(char **m_str, t_all *all)
             return (1);
         i++;
     }
-    // проверка к концу команды - закрыта ли кавычка?
-    if (o_l_quote != 0 || t_l_quote != 0)
+    if (o_l_quote != 0 || t_l_quote != 0) // проверка к концу команды - закрыта ли кавычка?
         return (1);
     return (0);
 }

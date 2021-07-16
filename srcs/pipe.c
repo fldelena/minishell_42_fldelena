@@ -1,34 +1,34 @@
 #include "../includes/minishell.h"
 
-void	pipe_found(t_pipe *pipe, char *arr)
+void	pipe_found(t_lst_pipe *pipe, char *arr)
 {
 	(void)pipe;
 	printf("строка |%s| имеет символов (%zu)\n", arr, ft_strlen(arr));
 }
 
 
-// void	ft_pipe(char **arguments)
-// {
-// 	int		pipe_fd[2];				//создал массив для пайпа
-// 	pid_t	pid;					//создал идентификатор дочернего процесса
+void	ft_pipe(char **arguments)
+{
+	int		pipe_fd[2];				//создал массив для пайпа
+	pid_t	pid;					//создал идентификатор дочернего процесса
 
-// 	pipe(pipe_fd);					//заполнил масив
-// 	pid = fork();					// дублируем программку
-// 	if (pid == 0)					// если мы в дочернем процессе
-// 	{
-// 		dup2(fd[1], 1);				// дублируем фдшник в который пишем
-// 		close(fd[0]);				// закрываем тот из которого читаем, т.к. нам он тут не нужен
-// 		execve("/bin/ls", arguments, 0);
-// 		close(fd[1])
-// 	}
-// 	else
-// 	{
-// 		dup2(fd[0], 0);				// дублируем fd из которого читаем
-// 		close(fd[1]);				// закрывает тот в который пишем, т.к. не нужен
-// 		waitpid(pid, 0, 0);
-// 		close(fd[0]);
-// 	}
-// }
+	pipe(pipe_fd);					//заполнил масив
+	pid = fork();					// дублируем программку
+	if (pid == 0)					// если мы в дочернем процессе
+	{
+		dup2(pipe_fd[1], 1);				// дублируем фдшник в который пишем
+		close(pipe_fd[0]);				// закрываем тот из которого читаем, т.к. нам он тут не нужен
+		execve("/bin/ls", arguments, 0);
+		close(pipe_fd[1]);
+	}
+	else
+	{
+		dup2(pipe_fd[0], 0);				// дублируем fd из которого читаем
+		close(pipe_fd[1]);				// закрывает тот в который пишем, т.к. не нужен
+		waitpid(pid, 0, 0);
+		close(pipe_fd[0]);
+	}
+}
 
 
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fldelena <fldelena@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gvenonat <gvenonat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/10 09:42:53 by frdescam          #+#    #+#             */
-/*   Updated: 2021/04/29 20:43:01 by fldelena         ###   ########.fr       */
+/*   Updated: 2021/07/16 23:40:01 by gvenonat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void			ft_putendl(char const *s);
 void			ft_putstr(char const *s);
 int				ft_simbcount(char *arr, char c);
 char			**ft_split(char const *s, char c);
+char			*ft_itoa(int a);
 char			*ft_strchr(const char *str, int ch);
 size_t			ft_strcpy(char *dst, char *src);
 char			*ft_strdup(const char *str);

@@ -23,5 +23,7 @@ t_all	*main_struct_malloc(char **envp)
 
 	all = malloc(sizeof(t_all));
 	all->env = env_malloc(envp);
+	all->pipe = malloc(sizeof(t_lst_pipe));
+	all->pipe->next = NULL;
 	return (all);
 }
