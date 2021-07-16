@@ -10,10 +10,10 @@ t_env	*env_malloc(char **envp)
 	word_count = 0;
 	while(*(envp + word_count))
 		word_count++;
-	// printf("!!!!!!!!!!!!!!!!!!!!%d\n", word_count);
 	env->envp = malloc(sizeof(char *) * (word_count + 1));
 	env->var = malloc(sizeof(char *) * (word_count + 1));
 	env->val = malloc(sizeof(char *) * (word_count + 1));
+	env->f_equal = malloc(sizeof(int) * (word_count + 1));
 	return (env);
 }
 

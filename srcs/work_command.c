@@ -25,14 +25,15 @@ void	ft_echo(int fd, char **arguments)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void	ft_env(char **envp)
+void	ft_env(t_env *env)
 {
 	int i;
 
 	i = 0;
-	while (*(envp + i))
+	while (env->envp[i] != NULL)
 	{
-		printf("%s\n", *(envp + i));
+		if (env->f_equal[i] == 2)
+			printf("%s\n", env->envp[i]);
 		i++;
 	}
 }
@@ -43,30 +44,64 @@ void	ft_cd(char **arguments)
 {
 	if (arguments[1] == NULL || !(strcmp(arguments[1], "~")))
 		chdir("/Users/fldelena/");								// в будущем сюда будет помещена переменная окружения HOME
-	else if (*(arguments + 2) == NULL)
+	else if (*(arguments + 1) != NULL)
 		chdir(arguments[1]);
+	if (errno != 0)
+		printf("minishell: cd: %s: %s\n", arguments[1], strerror(errno));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void	ft_export(t_env *env, char **arguments)
 {
-	int		i;
 	char	**sort_envp;
+	char	**sort_var;
+	char	**sort_val;
+	int		*f_equal;
+	char	**var_val;
+	int		i;
 
 	i = 0;
 	if (*(arguments + 1) != NULL)
 	{
-		env->envp = add_variable(env->envp, arguments);	// добавление переменных окружения (найти способ вытащить эту строку за пределы этой функции!!!!!!!!!!!!))
+		add_variable(env, arguments);
 	}
 	else
 	{
 		sort_envp = arr_copy(env->envp);
-		line_sort(sort_envp);						// сортировочка по алфавиту (заключить в кавычки все то что идет после знака равно!!!!)
+		line_sort(sort_envp);
+		while (sort_envp[i] != NULL)
+			i++;
+		sort_var = malloc(sizeof(char *) * (i + 1));
+		sort_val = malloc(sizeof(char *) * (i + 1));
+		f_equal = malloc(sizeof(int) * (i + 1));
+		i = 0;
+		while(sort_envp[i] != NULL)						// сортировочка по алфавиту (заключить в кавычки все то что идет после знака равно!!!!)
+		{
+			if (ft_strchr(sort_envp[i], '='))
+			{
+				var_val = ft_split(sort_envp[i], '=');
+				sort_var[i] = var_val[0];
+				sort_val[i] = var_val[1];
+				f_equal[i] = 2;
+			}
+			else
+			{
+				sort_var[i] = ft_strdup(sort_envp[i]);
+				sort_val[i] = ft_strdup("");
+				f_equal[i] = 1;
+			}
+			if(!var_val)
+				free (var_val);
+			i++;
+		}
+		i = 0;
 		while (*(sort_envp + i))
 		{
-			printf("%s", "declare -x ");
-			printf("%s\n", *(sort_envp + i));
+			printf("declare -x %s", sort_var[i]);
+			if (f_equal[i] == 2)
+				printf("=\"%s\"", sort_val[i]);
+			printf("\n");
 			i++;
 		}
 		free_arr(sort_envp);
@@ -75,17 +110,15 @@ void	ft_export(t_env *env, char **arguments)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// void	ft_unset(t_env *env, char **arguments)
-// {
-// 	if (*(arguments + 1) != NULL)
-// 		env->envp = del_variable(env, arguments);
-// 	else
-// 	{
-// 		//вроде тут ничего не должно быть, на всякий случай оставлю
-// 	}
-
-// 	// написать функцию которая будет создавать массив меньшей длины без некоторых индексов
-// }
+void	ft_unset(t_env *env, char **arguments)
+{
+	if (*(arguments + 1) != NULL)
+		del_variable(env, arguments);
+	else
+	{
+		//вроде тут ничего не должно быть, на всякий случай оставлю
+	}
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -101,14 +134,11 @@ int	ft_exit(char **arguments)
 	else if (i == 2)
 		exit(ft_atoi(arguments[1]));
 	else
-		exit(0);
+		exit(errno);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 int ft_work_command(char **arguments, t_all *all)
 {
-	int res;
-
-	res = 0;
 	if (strcmp(arguments[0], "pwd") == 0)
 		printf("%s\n", getcwd(0,0));
 	if (strcmp(arguments[0], "ls") == 0)
@@ -116,22 +146,20 @@ int ft_work_command(char **arguments, t_all *all)
 		pid_t pid;
 		pid = fork();
 		if (pid == 0)
-		{
-		execve("/bin/ls", arguments, 0);
-		}
+			execve("/bin/ls", arguments, 0);
 		waitpid(pid, 0, 0);
 	}
 	if (strcmp(arguments[0], "echo") == 0)
 		ft_echo(1, arguments);
-	if (strcmp(arguments[0], "env") == 0)		// не отображать переменные без "="
-		ft_env(all->env->envp);
 	if (strcmp(arguments[0], "cd") == 0)
 		ft_cd(arguments);
-	if (strcmp(arguments[0], "export") == 0)  // добавить проверку существование переменной
+	if (strcmp(arguments[0], "env") == 0)
+		ft_env(all->env);
+	if (strcmp(arguments[0], "export") == 0)
 		ft_export(all->env, arguments);
-	// if (strcmp(arguments[0], "unset") == 0)  // доделать
-	// 	ft_unset(all->env, arguments);
-	if (strcmp(arguments[0], "exit") == 0)			// gvenonat
-		res = ft_exit(arguments);
+	if (strcmp(arguments[0], "unset") == 0)
+		ft_unset(all->env, arguments);
+	if (strcmp(arguments[0], "exit") == 0)		// gvenonat
+		ft_exit(arguments);
 	return(0);
 }

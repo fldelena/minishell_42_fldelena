@@ -48,6 +48,10 @@ char	*cut_quote(char *arg)		// короче я хз как кейсы сверх
 		if ((arg[i] != '"' && arg[i] != '\''))
 			path[j++] = arg[i++];
 	}
+	path[j] = '\0';
 	return(path);
 }
 // ft_strlen(path) > 0
+
+
+// LOOOL qwe"qwe" "yhn    " - не работает , но работает в дебагерре

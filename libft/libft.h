@@ -37,6 +37,7 @@ int				ft_strnstr(const char *str1, const char *str2, size_t size);
 char			*ft_strtrim(char *s1, char *set);
 char			*ft_substr(char *s);
 int				ft_trim(char *str);
+int				ft_strncmp(const char *s1, const char *s2, size_t n);
 int				get_next_line(int fd, char **line);
 
 #endif
