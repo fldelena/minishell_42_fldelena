@@ -10,16 +10,16 @@ void print_error(char *command, int my_error)
 		write(2, "minishell: too much arguments\n", 61);
 	else if (my_error == -2)
 		write(2, "minishell: Too much command in one string\n", 42);
-	if (my_error == -3)
+	else if (my_error == -3)
 		write(2, "minishell: syntax error near unexpected token `|'\n", 50);
-	if (my_error == -4)
+	else if (my_error == -4)
 		write(2, "minishell: syntax error near unexpected token `||'\n", 51);
 	else if (my_error == 127)
-		printf("minishell: %s: command not found\n", command);    // тут исправить вывод ошибки
+		printf("minishell: %s: command not found\n", command); // тут исправить вывод ошибки
 	else if (my_error == 1)
 		write(2, "minishell: Not valid\n", 21);
 	else
-		return ;
+		printf("%s\n", strerror(errno));
 }
 
 void init_errno(t_all *all)
@@ -34,7 +34,7 @@ void init_errno(t_all *all)
 	dollar[2] = '\0';
 	error_my = ft_itoa(errno);
 	dollar = ft_strjoin(dollar, error_my);
-	arguments = malloc(sizeof(char*) * 3);
+	arguments = malloc(sizeof(char *) * 3);
 	arguments[0] = "hi\0";
 	arguments[1] = dollar;
 	arguments[2] = NULL;
@@ -44,15 +44,15 @@ void init_errno(t_all *all)
 
 int main(int argc, char **argv, char **envp)
 {
-	(void) argv;
-	char	*m_str;
-	int		i;
-	char	**arguments;
-	t_all	*all;
+	(void)argv;
+	char *m_str;
+	int i;
+	char **arguments;
+	t_all *all;
 
 	m_str = 0;
 	arguments = NULL;
-	if (argc != 1)					// не должен принимать никаких аргументов
+	if (argc != 1) // не должен принимать никаких аргументов
 	{
 		print_error(NULL, -1);
 		return (-1);
@@ -64,19 +64,19 @@ int main(int argc, char **argv, char **envp)
 		init_errno(all);
 		free_main(&m_str, arguments, all);
 		m_str = readline("minishell: ");
-		if (m_str[0] == '\0')						// вывод ошибки чтения строки
-			continue ;
+		if (m_str[0] == '\0') // вывод ошибки чтения строки
+			continue;
 		add_history(m_str);
-		if(ft_count_char(m_str, ';') > 0)			// вывод ошибки количества команд
+		if (ft_count_char(m_str, ';') > 0) // вывод ошибки количества команд
 		{
 			print_error(NULL, -2);
-			continue ;
+			continue;
 		}
-		errno = ft_check_command(&m_str, all);		// проверка валидности введенной команды
+		errno = ft_check_command(&m_str, all); // проверка валидности введенной команды
 		if (errno != 0)
 		{
 			print_error(m_str, errno);
-			continue ;
+			continue;
 		}
 		////////////////////////
 		// t_lst_pipe *tmp;
@@ -89,21 +89,19 @@ int main(int argc, char **argv, char **envp)
 		// continue ;
 		////////////////////////
 
-		arguments = ft_split(m_str, ';');			// разделим команду на аргументы
+		arguments = ft_split(m_str, ';'); // разделим команду на аргументы
 		i = 0;
-		while(arguments[i] != NULL)
+		while (arguments[i] != NULL)
 		{
 			// printf("до =%s\n", arguments[i]);
 			arguments[i] = cut_quote(arguments[i]);
 			// printf("после =%s\n\n", arguments[i]);
 			i++;
 		}
-
-//		ВНИМАНИЕ! тестовый участок! экспериментирую с пайпами!
+		//		ВНИМАНИЕ! тестовый участок! экспериментирую с пайпами!
 
 		// if (0)						// проверка флага или чего-то там еще на наличие пайпа
 		// 	ft_pipe(arguments);
-
 
 		// i = 0;
 		// while (*(arguments + i) != NULL)
@@ -111,13 +109,14 @@ int main(int argc, char **argv, char **envp)
 		// 	printf("аргументы![%d] %s\n", i, arguments[i]);
 		// 	i++;
 		// }
-//		ВНИМАНИЕ! конец тестового участка!
+		//		ВНИМАНИЕ! конец тестового участка!
 
 		ft_work_command(arguments, all);
-		if (errno != 0)						// вывод ошибки cd реализовал внутри
+		if (errno != 0) // вывод ошибки cd реализовал внутри
 		{
 			print_error(m_str, errno);
-			continue ;
+			continue;
 		}
 	}
+	return (errno);
 }

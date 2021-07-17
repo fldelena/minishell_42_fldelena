@@ -1,14 +1,14 @@
 #include "../includes/minishell.h"
 
-t_env	*env_malloc(char **envp)
+t_env *env_malloc(char **envp)
 {
-	t_env	*env;
-	int		word_count;
+	t_env *env;
+	int word_count;
 
 	env = malloc(sizeof(t_env));
 
 	word_count = 0;
-	while(*(envp + word_count))
+	while (*(envp + word_count))
 		word_count++;
 	env->envp = malloc(sizeof(char *) * (word_count + 1));
 	env->var = malloc(sizeof(char *) * (word_count + 1));
@@ -17,7 +17,7 @@ t_env	*env_malloc(char **envp)
 	return (env);
 }
 
-t_all	*main_struct_malloc(char **envp)
+t_all *main_struct_malloc(char **envp)
 {
 	t_all *all;
 
@@ -25,5 +25,7 @@ t_all	*main_struct_malloc(char **envp)
 	all->env = env_malloc(envp);
 	all->pipe = malloc(sizeof(t_lst_pipe));
 	all->pipe->next = NULL;
+	all->pipe->prev = NULL;
+	all->pipe->f_pipe = -1;
 	return (all);
 }

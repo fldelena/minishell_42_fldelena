@@ -1,6 +1,6 @@
 #include "../includes/minishell.h"
 
-void		free_arr(char **arr)
+void free_arr(char **arr)
 {
 	int i;
 	i = -1;
@@ -10,7 +10,7 @@ void		free_arr(char **arr)
 	free(arr);
 }
 
-void free_main(char **m_str,char **arguments, t_all *all)
+void free_main(char **m_str, char **arguments, t_all *all)
 {
 	int i;
 	(void)all;
@@ -24,11 +24,13 @@ void free_main(char **m_str,char **arguments, t_all *all)
 	}
 	all->pipe = malloc(sizeof(t_lst_pipe));
 	all->pipe->next = NULL;
+	all->pipe->prev = NULL;
+	all->pipe->f_pipe = -1;
 	i = 0;
 	if (m_str[0] != NULL)
 	{
 		free(m_str[0]);
-		while(arguments != NULL && arguments[i] != NULL)
+		while (arguments != NULL && arguments[i] != NULL)
 		{
 			free(arguments[i]);
 			i++;

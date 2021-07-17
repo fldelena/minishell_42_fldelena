@@ -1,16 +1,14 @@
 #include "../includes/minishell.h"
 
-static void     ft_first(char *m_str, int *t_l_quote, int *o_l_quote, int *i)
+static void ft_first(char *m_str, int *t_l_quote, int *o_l_quote, int *i)
 {
     // определяем какая первая кавычка
-    if ((m_str[*i] == '"' && *t_l_quote == 0 && (*i > 0 && m_str[*i - 1] != '\\') && *o_l_quote == 0) \
-        || (m_str[*i] == '"' && *i == 0))
+    if ((m_str[*i] == '"' && *t_l_quote == 0 && (*i > 0 && m_str[*i - 1] != '\\') && *o_l_quote == 0) || (m_str[*i] == '"' && *i == 0))
     {
         (*t_l_quote)++;
         (*i)++;
     }
-    if ((m_str[*i] == '\'' && *o_l_quote == 0 && (i > 0 && m_str[*i - 1] != '\\') && *t_l_quote == 0) \
-        || (m_str[*i] == '"' && *i == 0))
+    if ((m_str[*i] == '\'' && *o_l_quote == 0 && (i > 0 && m_str[*i - 1] != '\\') && *t_l_quote == 0) || (m_str[*i] == '"' && *i == 0))
     {
         (*o_l_quote)++;
         (*i)++;
@@ -36,7 +34,7 @@ static int ft_count_env(char *m_str, int *i, int l_dollar)
 
     count = 0;
     if (m_str[*i] == '{')
-       (*i)++;
+        (*i)++;
     if (l_dollar == 1)
         while (m_str[*i] != '\0' && m_str[*i] != '}')
         {
@@ -44,8 +42,7 @@ static int ft_count_env(char *m_str, int *i, int l_dollar)
             count++;
         }
     else
-        while (m_str[*i] != '\0' && m_str[*i] != ' ' && m_str[*i] != ',' && m_str[*i] != '"' && m_str[*i] != '\'' \
-                && m_str[*i] != '-' && m_str[*i] != '_') //  сделать по таблице askii m_str[*i] > < числа т.к. много символов (+ других) прерывает имя переменной
+        while (m_str[*i] != '\0' && m_str[*i] != ' ' && m_str[*i] != ',' && m_str[*i] != '"' && m_str[*i] != '\'' && m_str[*i] != '-' && m_str[*i] != '_') //  сделать по таблице askii m_str[*i] > < числа т.к. много символов (+ других) прерывает имя переменной
         {
             (*i)++;
             count++;
@@ -55,8 +52,8 @@ static int ft_count_env(char *m_str, int *i, int l_dollar)
 
 static char *ft_help1(char *m_str, int *i, int count)
 {
-    int     j;
-    char    *now_env;
+    int j;
+    char *now_env;
 
     j = 0;
     now_env = malloc(count + 1);
@@ -72,8 +69,8 @@ static char *ft_help1(char *m_str, int *i, int count)
 
 static char *ft_help2(char *m_str, int *i, int count)
 {
-    int     j;
-    char    *now_env;
+    int j;
+    char *now_env;
 
     j = 0;
     now_env = malloc(count + 1);
@@ -87,7 +84,7 @@ static char *ft_help2(char *m_str, int *i, int count)
     return (now_env);
 }
 
-static int ft_before_env(char *m_str, char *now_env, int count, char *m2)  // обработка не учитывает, если там могут стоять скобки
+static int ft_before_env(char *m_str, char *now_env, int count, char *m2) // обработка не учитывает, если там могут стоять скобки
 {
     int j;
     int i;
@@ -95,11 +92,11 @@ static int ft_before_env(char *m_str, char *now_env, int count, char *m2)  // о
 
     i = 0;
     j = 0;
-    while(m_str[i] != '\0')
+    while (m_str[i] != '\0')
     {
         count2 = 0;
-        while (count2 != count && m_str[i + count2] != '\0')                // ищу в главной строке название env, а до этого перезаписываю
-            if (m_str[i + count2] == now_env[count2])  // && (i == 0 || (m_str[i - 1] == '$' || m_str[i - 1] == '{'))
+        while (count2 != count && m_str[i + count2] != '\0') // ищу в главной строке название env, а до этого перезаписываю
+            if (m_str[i + count2] == now_env[count2])        // && (i == 0 || (m_str[i - 1] == '$' || m_str[i - 1] == '{'))
                 count2++;
             else
                 break;
@@ -143,13 +140,13 @@ static void ft_end_rewrite(char *m2, char *m_str, int j_m, int j_str)
 
 static int ft_rewrite(char **m_str, char *now_env, t_all *all, int count) // проверям есть ли такая переменная. если есть то перезаписываем мэин строку.
 {
-    int     i;
-    int     j_m;
-    int     j_str;
-    char    *m2;
+    int i;
+    int j_m;
+    int j_str;
+    char *m2;
 
     i = 0;
-    while(all->env->var[i])                     // проверка есть ли такая env
+    while (all->env->var[i]) // проверка есть ли такая env
     {
         if (strcmp(all->env->var[i], now_env) == 0)
             break;
@@ -158,9 +155,9 @@ static int ft_rewrite(char **m_str, char *now_env, t_all *all, int count) // п�
     if (all->env->val[i])
     {
         m2 = malloc(ft_strlen(*m_str) - count + ft_strlen(all->env->val[i]) + 1);
-        j_m = ft_before_env(*m_str, now_env, count, m2);        // переписывает до переменной - вернёт символ, где начинается нужная переменная
+        j_m = ft_before_env(*m_str, now_env, count, m2); // переписывает до переменной - вернёт символ, где начинается нужная переменная
         if (m_str[0][j_m + 1] != '{')
-            j_str = j_m + count + 1;                        // можно вынести в отсдельную функцию    // после env от куда m_str переписывать
+            j_str = j_m + count + 1; // можно вынести в отсдельную функцию    // после env от куда m_str переписывать
         else
             j_str = j_m + count + 3;
         ft_write_env(i, m2, all, &j_m);
@@ -172,11 +169,11 @@ static int ft_rewrite(char **m_str, char *now_env, t_all *all, int count) // п�
     return (0);
 }
 
-static int ft_dollar(char **m_str, int *i, t_all *all)       // можно перенести это в обработку аргументов
+static int ft_dollar(char **m_str, int *i, t_all *all) // можно перенести это в обработку аргументов
 {
-    char    *now_env;
-    int     l_dollar;
-    int     count;          // длина названия переменной
+    char *now_env;
+    int l_dollar;
+    int count; // длина названия переменной
 
     l_dollar = 0;
     count = 0;
@@ -184,12 +181,12 @@ static int ft_dollar(char **m_str, int *i, t_all *all)       // можно пе�
     if (m_str[0][*i] == '$')
     {
         (*i)++;
-        if (m_str[0][*i] == '{')                           // если у нас после доллара идут скобки, нужно найти вторую
+        if (m_str[0][*i] == '{') // если у нас после доллара идут скобки, нужно найти вторую
             (l_dollar)++;
         count = ft_count_env(m_str[0], i, l_dollar);
-        if (l_dollar == 1 && m_str[*i] != '\0')         // тут записываем имя переменной если была скобка
+        if (l_dollar == 1 && m_str[*i] != '\0') // тут записываем имя переменной если была скобка
             now_env = ft_help1(m_str[0], i, count);
-        else if (l_dollar == 0)                         // тут записываем имя переменной если скобки не было
+        else if (l_dollar == 0) // тут записываем имя переменной если скобки не было
             now_env = ft_help2(m_str[0], i, count);
         else
             return (-1);
@@ -205,15 +202,16 @@ static int ft_dollar(char **m_str, int *i, t_all *all)       // можно пе�
 static int ft_add_lst(t_all *all, int c_pip, int count)
 {
     t_lst_pipe *tmp;
+    t_lst_pipe *tmp2;
     int num2;
 
     if (c_pip > 3)
         return (-4);
-    if (c_pip > 2)
+    if (c_pip >= 2)
         return (-3);
     num2 = 0;
     tmp = all->pipe;
-    while(tmp->next != NULL)
+    while (tmp->next != NULL)
     {
         num2++;
         tmp = tmp->next;
@@ -222,8 +220,10 @@ static int ft_add_lst(t_all *all, int c_pip, int count)
     tmp->f_pipe = c_pip;
     tmp->arg_p = count;
     tmp->next = malloc(sizeof(t_lst_pipe));
+    tmp2 = tmp;
     tmp = tmp->next;
     tmp->next = NULL;
+    tmp->prev = tmp2;
     return (0);
 }
 
@@ -239,16 +239,16 @@ int ft_check_command(char **m_str, t_all *all)
     i = 0;
     o_l_quote = 0;
     t_l_quote = 0;
-    while(m_str[0][i] != '\0')
+    while (m_str[0][i] != '\0')
     {
         c_pip = 0;
-        while(m_str[0][i] == ' ' || m_str[0][i] == '\t' || m_str[0][i] == '|')
+        while (m_str[0][i] == ' ' || m_str[0][i] == '\t' || m_str[0][i] == '|')
         {
             if (t_l_quote == 0 && o_l_quote == 0)
             {
                 if (m_str[0][i] == '|')
                 {
-                    while(m_str[0][i] == '|')
+                    while (m_str[0][i] == '|')
                     {
                         c_pip++;
                         i++;
@@ -256,6 +256,7 @@ int ft_check_command(char **m_str, t_all *all)
                     count--;
                     if (ft_add_lst(all, c_pip, count) != 0)
                         return (ft_add_lst(all, c_pip, count));
+                    i = i - c_pip;
                 }
                 m_str[0][i] = ';';
                 if (m_str[0][i - 1] != ';')
@@ -265,7 +266,7 @@ int ft_check_command(char **m_str, t_all *all)
         }
         ft_first(*m_str, &t_l_quote, &o_l_quote, &i); // определяем кавычки
         // proverka открыта кавычка то мы не заходим в доллар
-        if (o_l_quote == 0 && ft_dollar(m_str, &i, all) == -1)  // проверка $
+        if (o_l_quote == 0 && ft_dollar(m_str, &i, all) == -1) // проверка $
             return (1);
         i++;
     }
