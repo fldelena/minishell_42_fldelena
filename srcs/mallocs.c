@@ -26,6 +26,6 @@ t_all *main_struct_malloc(char **envp)
 	all->pipe = malloc(sizeof(t_lst_pipe));
 	all->pipe->next = NULL;
 	all->pipe->prev = NULL;
-	all->pipe->f_pipe = -1;
+	all->pipe->count_red_pip = -1;
 	return (all);
 }

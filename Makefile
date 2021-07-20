@@ -8,6 +8,7 @@ SRC			=	minishell.c \
 				work_command_utils.c \
 				mallocs.c \
 				pipe.c \
+				binary_work.c \
 				free.c
 
 SRCS = $(addprefix $(SRCFD)/, $(SRC))

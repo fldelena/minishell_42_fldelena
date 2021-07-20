@@ -10,6 +10,8 @@
 #include <dirent.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #define TRUE 1
 
@@ -30,8 +32,9 @@ typedef struct s_lst_pipe
 {
 	pid_t pid;
 	int fd_pid[2];
-	int f_pipe;				 // если пайп то = 1 | если > то = 2 | если >> то 3 | если < то 4 | если << то ... 5 блять, очевидно же
-	int arg_p;				 // на каком аргументе начинается пайп
+	int count_red_pip;				 // сколько подряд пайпов или редиректов
+	int f_red_pip;			 // если пайп то 1 , если > или >> то = 2 | если < или << то 3
+	int start_arg;				 // на каком аргументе начинается пайп
 	int num;				 // положение листа в списке // delete me
 	struct s_lst_pipe *next; // следующий элемент списка
 	struct s_lst_pipe *prev;
@@ -67,6 +70,7 @@ void make_envp(t_all *all, char **envp);
 t_all *main_struct_malloc(char **envp);
 
 void pipe_found(t_lst_pipe *pipe, char *arr);
+int binary_work(t_all *all, char **arguments);
 // void			ft_pipe(char **arguments);
 
 #endif

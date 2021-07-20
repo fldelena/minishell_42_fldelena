@@ -14,6 +14,14 @@ void print_error(char *command, int my_error)
 		write(2, "minishell: syntax error near unexpected token `|'\n", 50);
 	else if (my_error == -4)
 		write(2, "minishell: syntax error near unexpected token `||'\n", 51);
+	else if (my_error == -5)
+		write(2, "minishell: syntax error near unexpected token `>'\n", 51);
+	else if (my_error == -6)
+		write(2, "minishell: syntax error near unexpected token `>>'\n", 51);
+	else if (my_error == -7)
+		write(2, "minishell: syntax error near unexpected token `<'\n", 51);
+	else if (my_error == -8)
+		write(2, "minishell: syntax error near unexpected token `<<'\n", 51);
 	else if (my_error == 127)
 		printf("minishell: %s: command not found\n", command); // тут исправить вывод ошибки
 	else if (my_error == 1)
@@ -72,51 +80,38 @@ int main(int argc, char **argv, char **envp)
 			print_error(NULL, -2);
 			continue;
 		}
+		////////////////// ТУТ УМИРАЕТ errno ИЗ МИНИШЕЛЛА В ПАЙПЕ
 		errno = ft_check_command(&m_str, all); // проверка валидности введенной команды
 		if (errno != 0)
 		{
 			print_error(m_str, errno);
 			continue;
 		}
-		////////////////////////
+
+
+		////////////////////
 		// t_lst_pipe *tmp;
 		// tmp = all->pipe;
 		// while(tmp->next)
 		// {
-		// 	printf("num%i : arg = %i, count pipe = %i\n", tmp->num, tmp->arg_p, tmp->f_pipe);
+		// 	printf("num%i : arg = %i, count pipe/редиректов подряд= %i , тип редиректа = %i\n", tmp->num, tmp->start_arg, tmp->count_red_pip, tmp->f_red_pip);
 		// 	tmp = tmp->next;
 		// }
 		// continue ;
-		////////////////////////
+		////////////////////
 
+		
 		arguments = ft_split(m_str, ';'); // разделим команду на аргументы
 		i = 0;
 		while (arguments[i] != NULL)
 		{
-			// printf("до =%s\n", arguments[i]);
 			arguments[i] = cut_quote(arguments[i]);
-			// printf("после =%s\n\n", arguments[i]);
 			i++;
 		}
-		//		ВНИМАНИЕ! тестовый участок! экспериментирую с пайпами!
 
-		// if (0)						// проверка флага или чего-то там еще на наличие пайпа
-		// 	ft_pipe(arguments);
-
-		// i = 0;
-		// while (*(arguments + i) != NULL)
-		// {
-		// 	printf("аргументы![%d] %s\n", i, arguments[i]);
-		// 	i++;
-		// }
-		//		ВНИМАНИЕ! конец тестового участка!
-
-		ft_work_command(arguments, all);
+		errno = ft_work_command(arguments, all);
 		if (errno != 0) // вывод ошибки cd реализовал внутри
-		{
 			print_error(m_str, errno);
-			continue;
-		}
 	}
 	return (errno);
 }

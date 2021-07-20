@@ -16,16 +16,17 @@ void free_main(char **m_str, char **arguments, t_all *all)
 	(void)all;
 	t_lst_pipe *tmp;
 
-	while (all->pipe)
+	while (all->pipe->next)
 	{
 		tmp = all->pipe;
 		all->pipe = all->pipe->next;
 		free(tmp);
 	}
+	free(all->pipe);
 	all->pipe = malloc(sizeof(t_lst_pipe));
 	all->pipe->next = NULL;
 	all->pipe->prev = NULL;
-	all->pipe->f_pipe = -1;
+	all->pipe->count_red_pip = -1;
 	i = 0;
 	if (m_str[0] != NULL)
 	{

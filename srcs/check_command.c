@@ -199,35 +199,48 @@ static int ft_dollar(char **m_str, int *i, t_all *all) // можно перен�
     return (0);
 }
 
-static int ft_add_lst(t_all *all, int c_pip, int count)
+static int ft_add_lst(t_all *all, int c_pip, int count, int f_dir)
 {
     t_lst_pipe *tmp;
     t_lst_pipe *tmp2;
     int num2;
 
-    if (c_pip > 3)
+    if (c_pip >= 3 && f_dir == 1)
         return (-4);
-    if (c_pip >= 2)
+    if (c_pip >= 2 && f_dir == 1)
         return (-3);
-    num2 = 0;
+
+    if (c_pip >= 4 && f_dir == 2)
+        return (-6);
+    if (c_pip >= 3 && f_dir == 2)
+        return (-5);
+
+    if (c_pip >= 4 && f_dir == 3)
+        return (-8);
+    if (c_pip >= 3 && f_dir == 3)
+        return (-7);
+    num2 = 1;
     tmp = all->pipe;
     while (tmp->next != NULL)
     {
         num2++;
         tmp = tmp->next;
     }
+    tmp->f_red_pip = f_dir;
     tmp->num = num2;
-    tmp->f_pipe = c_pip;
-    tmp->arg_p = count;
+    tmp->count_red_pip = c_pip;
+    tmp->start_arg = count;
     tmp->next = malloc(sizeof(t_lst_pipe));
     tmp2 = tmp;
     tmp = tmp->next;
+    tmp->num = -1;
+    tmp->start_arg = -1;
     tmp->next = NULL;
     tmp->prev = tmp2;
     return (0);
 }
 
-int ft_check_command(char **m_str, t_all *all)
+int ft_check_command(char **m_str, t_all *all) // asdf > adsf >> asdas << asdfas < asdas | wedf |
 {
     int i;
     int o_l_quote;
@@ -235,17 +248,18 @@ int ft_check_command(char **m_str, t_all *all)
     int count;
     int c_pip;
 
-    count = 1;
+    count = 0;
     i = 0;
     o_l_quote = 0;
     t_l_quote = 0;
     while (m_str[0][i] != '\0')
     {
         c_pip = 0;
-        while (m_str[0][i] == ' ' || m_str[0][i] == '\t' || m_str[0][i] == '|')
+        while (m_str[0][i] == ' ' || m_str[0][i] == '\t' || m_str[0][i] == '|' || (m_str[0][i] == '>') || (m_str[0][i] == '<'))
         {
             if (t_l_quote == 0 && o_l_quote == 0)
             {
+                //////////
                 if (m_str[0][i] == '|')
                 {
                     while (m_str[0][i] == '|')
@@ -253,13 +267,46 @@ int ft_check_command(char **m_str, t_all *all)
                         c_pip++;
                         i++;
                     }
-                    count--;
-                    if (ft_add_lst(all, c_pip, count) != 0)
-                        return (ft_add_lst(all, c_pip, count));
+                    if (ft_add_lst(all, c_pip, count, 1) != 0)
+                        return (ft_add_lst(all, c_pip, count, 1));
                     i = i - c_pip;
                 }
+                ///////////
+                if (m_str[0][i] == '>')
+                {
+                    while (m_str[0][i] == '>')
+                    {
+                        // printf("m_str[0][%i] = [%c], c_pip = %i\n", i, m_str[0][i], c_pip);
+                        c_pip++;
+                        i++;
+                    }
+                    if (ft_add_lst(all, c_pip, count, 2) != 0)
+                        return (ft_add_lst(all, c_pip, count, 2));
+                    i = i - c_pip;
+                }
+                ///////////
+                if (m_str[0][i] == '<')
+                {
+                    while (m_str[0][i] == '<')
+                    {
+                        c_pip++;
+                        i++;
+                    }
+                    if (ft_add_lst(all, c_pip, count, 3) != 0)
+                        return (ft_add_lst(all, c_pip, count, 3));
+                    i = i - c_pip;
+                }
+                ///////////
+                while(c_pip > 1) // что бы пропустить если идёт два редиректа
+                {
+                    m_str[0][i] = ';';
+                    if (i > 0 && m_str[0][i - 1] != ';')
+                        count++;
+                    i++;
+                    c_pip--;
+                }
                 m_str[0][i] = ';';
-                if (m_str[0][i - 1] != ';')
+                if (i > 0 && m_str[0][i - 1] != ';')
                     count++;
             }
             i++;

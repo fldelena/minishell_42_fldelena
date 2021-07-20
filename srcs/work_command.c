@@ -1,6 +1,6 @@
 #include "../includes/minishell.h"
 
-void ft_echo(int fd, char **arguments)
+int ft_echo(int fd, char **arguments)
 {
 	int i;
 	int n;
@@ -21,11 +21,12 @@ void ft_echo(int fd, char **arguments)
 	}
 	if (!n)
 		write(fd, "\n", 1);
+	return (0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void ft_env(t_env *env)
+int ft_env(t_env *env)
 {
 	int i;
 
@@ -37,11 +38,12 @@ void ft_env(t_env *env)
 				printf("%s\n", env->envp[i]);
 		i++;
 	}
+	return (0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void ft_cd(char **arguments, t_env *env)
+int ft_cd(char **arguments, t_env *env)
 {
 	int i;
 
@@ -58,11 +60,12 @@ void ft_cd(char **arguments, t_env *env)
 		chdir(arguments[1]);
 	if (errno != 0)
 		printf("minishell: cd: %s: %s\n", arguments[1], strerror(errno));
+	return (errno);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void ft_export(t_env *env, char **arguments)
+int ft_export(t_env *env, char **arguments)
 {
 	char **sort_envp;
 	char **sort_var;
@@ -119,11 +122,12 @@ void ft_export(t_env *env, char **arguments)
 		}
 		free_arr(sort_envp);
 	}
+	return (0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void ft_unset(t_env *env, char **arguments)
+int ft_unset(t_env *env, char **arguments)
 {
 	if (*(arguments + 1) != NULL)
 		del_variable(env, arguments);
@@ -131,6 +135,7 @@ void ft_unset(t_env *env, char **arguments)
 	{
 		//вроде тут ничего не должно быть, на всякий случай оставлю
 	}
+	return (0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -149,93 +154,166 @@ int ft_exit(char **arguments)
 	else
 		exit(errno);
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-int ft_work_old(char **arguments, t_all *all, int i)
-{
-	pid_t pid;
 
-	if (ft_strncmp(arguments[i], "pwd", ft_strlen("pwd")) == 0)
-		printf("%s\n", getcwd(0, 0));
-	else if (ft_strncmp(arguments[i], "ls", ft_strlen("ls")) == 0)
+char **ft_make_arg_n(char **arguments, t_all *all, int num)  // с нормой этого дерьма пусть возится gvenonat
+{
+	int count; // количество сргументов команды
+	int count_tmp_arg;
+	int i;
+	char **arg_now;
+	t_lst_pipe *tmp;
+	t_lst_pipe *tmp_help;
+
+	count_tmp_arg = 0;
+	tmp = all->pipe;
+	if (num != 0)
 	{
-		pid = fork();
-		if (pid == 0)
-			execve("/bin/ls", &arguments[i], 0);
-		waitpid(pid, 0, 0);
+		while (tmp->next)
+		{
+			if (tmp->num == num)
+				break ;
+			tmp = tmp->next;
+		}
+		count = tmp->start_arg;
+		tmp_help = tmp->next;
+		if (tmp->next && tmp_help->next)		// сюда захожу когда средние пайпы
+		{
+			tmp = tmp->next;
+			count = tmp->start_arg - count;
+		}
+		else			// когда самый последнйи пайп
+		{
+			i = 0;
+			while (arguments[count])		// ls ls | cat cat | me me | pwd pwd pwd pwd	
+			{
+				count++;
+				i++;
+			}
+			count = i;
+		}
+		if (tmp->prev && tmp->next && tmp_help->next)
+		{
+			tmp = tmp->prev;
+			count_tmp_arg = tmp->start_arg;
+		}
+		else
+			count_tmp_arg = tmp->start_arg;
 	}
-	// else if (ft_strncmp(arguments[i], "cat", ft_strlen("cat")) == 0)
-	// {
-	// 	pid = fork();
-	// 	if (pid == 0)
-	// 		execve("/bin/ls", arguments, 0);
-	// 	waitpid(pid, 0, 0);
-	// }
-	else if (ft_strncmp(arguments[i], "echo", ft_strlen("echo")) == 0)
-		ft_echo(1, arguments);
-	else if (ft_strncmp(arguments[i], "cd", ft_strlen("cd")) == 0)
-		ft_cd(arguments, all->env);
-	else if (ft_strncmp(arguments[i], "env", ft_strlen("env")) == 0)
-		ft_env(all->env);
-	else if (ft_strncmp(arguments[i], "export", ft_strlen("export")) == 0)
-		ft_export(all->env, arguments);
-	else if (ft_strncmp(arguments[i], "unset", ft_strlen("unset")) == 0)
-		ft_unset(all->env, arguments);
-	else if (ft_strncmp(arguments[i], "exit", ft_strlen("exit")) == 0) // gvenonat
-		ft_exit(arguments);
 	else
+		count = tmp->start_arg;
+	arg_now = malloc(sizeof(char *) * count + 1);
+	i = 0;
+	while (i != count)
 	{
-		printf("YA DOCHKA\n");
-		// pid = fork();
-		// if (pid == 0)
-		execve(arguments[i], &arguments[i], 0);
-		// waitpid(pid, 0, 0);
+		arg_now[i] = arguments[i + count_tmp_arg];
+		i++;
 	}
-	return (errno);
+	arg_now[i] = NULL;
+	return (arg_now);
 }
 
-int ft_work_command(char **arguments, t_all *all)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+int ft_work_old(char **arguments, t_all *all, int num)
 {
-	if (all->pipe->f_pipe == -1)
+	char **arg_now;
+
+	if (num != -1)
+		arg_now = ft_make_arg_n(arguments, all, num);
+	else
+		arg_now = arguments;
+	/////
+	// for (int i = 0; arg_now[i]; i++)			// тут выводим получившиеся строки
+	// 	printf("--%s\n", arg_now[i]);
+	// return (0);
+	/////
+	if (ft_strncmp(arg_now[0], "pwd", ft_strlen("pwd")) == 0)
 	{
-		ft_work_old(arguments, all, 0);
+		printf("%s\n", getcwd(0, 0));
+		return (errno);
 	}
-	else // нужно попробовать убрать tmp чтобы в work_old исполнять нужную команду
+	else if (ft_strncmp(arg_now[0], "echo", ft_strlen("echo")) == 0)
+		return (ft_echo(1, arg_now));
+	else if (ft_strncmp(arg_now[0], "cd", ft_strlen("cd")) == 0)
+		return (ft_cd(arg_now, all->env));
+	else if (ft_strncmp(arg_now[0], "env", ft_strlen("env")) == 0)
+		return (ft_env(all->env));
+	else if (ft_strncmp(arg_now[0], "export", ft_strlen("export")) == 0)
+		return (ft_export(all->env, arg_now));
+	else if (ft_strncmp(arg_now[0], "unset", ft_strlen("unset")) == 0)
+		return (ft_unset(all->env, arg_now));
+	else if (ft_strncmp(arg_now[0], "exit", ft_strlen("exit")) == 0) // gvenonat
+		ft_exit(arg_now);
+	else
+		return (binary_work(all, arg_now));
+	return (127);
+}
+
+int ft_work_command(char **arguments, t_all *all)	// asdfas asdas | asd asd >> asdasd << asf asd asd asd | ls
+{
+	if (all->pipe->count_red_pip == -1)
+		return (ft_work_old(arguments, all, -1));
+	else
 	{
 		t_lst_pipe *tmp;
-
 		tmp = all->pipe;
-		pipe(tmp->fd_pid);
-		tmp->pid = fork();
-		if (!tmp->pid && tmp->prev == NULL) // если отдаём
-		{
-
-			// dup2(tmp->fd_pid[1], 1);
-			// close(tmp->fd_pid[1]);
-			// close(tmp->fd_pid[0]);
-			printf("%s\n", arguments[all->pipe->arg_p]);
-			execve(arguments[all->pipe->arg_p], &arguments[all->pipe->arg_p], 0);
-			//ft_work_old(arguments, all, all->pipe->arg_p);
-			//execve(yes[0], yes, env);
-		}
-		close(tmp->fd_pid[1]);
-		waitpid(tmp->pid, 0, 0);
-		// tmp = tmp->next;
-		// if (!tmp->pid && tmp->prev != NULL && tmp->next != NULL)
+		////////////////////					то, как правильно подавать пайпы в функцию
+		// while (tmp->next)
 		// {
-		// 	dup2(tmp->fd_pid[1], 1); // если отдаём
-		// 	close(tmp->fd_pid[1]);
-		// 	close(tmp->fd_pid[0]);
-
-		// 	tmp = tmp->prev;
-
-		// 	dup2(tmp->fd_pid[0], 0); //если берем
-		// 	close(tmp->fd_pid[0]);
-		// 	close(tmp->fd_pid[1]);
-
+		// 	ft_work_old(arguments, all, tmp->num - 1);
+		// 	printf("\n");
 		// 	tmp = tmp->next;
-		// 	ft_work_old(arguments, all);
-		// 	// execve(head[0], head, env);
 		// }
+		// tmp = tmp->prev;
+		// ft_work_old(arguments, all, tmp->num);	// ls ls | cat cat | me me | pwd pwd pwd pwd	
+		// return (0);
+		////////////////////
+		while (tmp->next)
+		{
+			pipe(tmp->fd_pid);
+			tmp->pid = fork();
+			if (!tmp->pid) // если отдаём
+			{
+				if (tmp->prev == NULL)
+				{
+					dup2(tmp->fd_pid[1], 1);
+					close(tmp->fd_pid[1]);
+					close(tmp->fd_pid[0]);
+					ft_work_old(arguments, all, tmp->num - 1);
+				}
+				if (tmp->prev != NULL && tmp->next != NULL)
+				{
+					dup2(tmp->fd_pid[1], 1);
+					close(tmp->fd_pid[1]);
+					close(tmp->fd_pid[0]);
+
+					dup2(tmp->prev->fd_pid[0], 0);
+					close(tmp->prev->fd_pid[0]);
+					close(tmp->prev->fd_pid[1]);
+					ft_work_old(arguments, all, tmp->num - 1);
+				}
+				if (tmp->prev != NULL && tmp->next == NULL)
+				{
+					dup2(tmp->fd_pid[0], 0);
+					close(tmp->fd_pid[0]);
+					close(tmp->fd_pid[1]);
+					tmp = tmp->prev;			// мб так, а мб и не так :) см вывод пайпов сверху
+					ft_work_old(arguments, all, tmp->num);
+					tmp = tmp->next;
+				}
+			}
+			if (tmp->prev == NULL)
+				close(tmp->fd_pid[1]);
+			if (tmp->prev != NULL && tmp->next != NULL)
+			{
+				close(tmp->prev->fd_pid[0]);
+				close(tmp->fd_pid[1]);
+			}
+			if (tmp->prev != NULL && tmp->next == NULL)
+				close(tmp->fd_pid[0]);
+
+			tmp = tmp->next;
+		}
 	}
 	return (errno);
 }
