@@ -88,7 +88,6 @@ int main(int argc, char **argv, char **envp)
 			continue;
 		}
 
-
 		////////////////////
 		// t_lst_pipe *tmp;
 		// tmp = all->pipe;
@@ -99,7 +98,6 @@ int main(int argc, char **argv, char **envp)
 		// }
 		// continue ;
 		////////////////////
-
 		
 		arguments = ft_split(m_str, ';'); // разделим команду на аргументы
 		i = 0;
@@ -108,7 +106,6 @@ int main(int argc, char **argv, char **envp)
 			arguments[i] = cut_quote(arguments[i]);
 			i++;
 		}
-
 		errno = ft_work_command(arguments, all);
 		if (errno != 0) // вывод ошибки cd реализовал внутри
 			print_error(m_str, errno);

@@ -31,20 +31,23 @@ char	*cut_quote(char *arg)		// короче я хз как кейсы сверх
 
 	i = 0;
 	j = 0;
+	// printf("home= %s\n", arg);
 	path = (char *)malloc(sizeof(char) * ft_strlen(arg));
 	while (arg[i])
 	{
-		if ((arg[i] == '"' || arg[i] == '\'') && (arg[i - 1] != '\\')) //&& i > 0)) || ((arg[i] == '"' || arg[i] == '\'') && i == 0) ) // если перед " слеш - убрать слеш
+		if ((arg[i] == '"' || arg[i] == '\'') && ((i > 0 && arg[i - 1] != '\\' ) || i == 0))  // || ((arg[i] == '"' || arg[i] == '\'') && i == 0) ) // если перед " слеш - убрать слеш
 		{
 			path = ft_strjoin(path, cut(arg, &i)); // эта фанкшн возвращает строку без ковычек, и сдвигает индекс "i" на расстояние длины строки
 			j = ft_strlen(path);
 			i++;
 			// j--;
 		}
-		else if (arg[i - 1] == '\\' && (arg[i] == '"' || arg[i] == '\''))
+		else if ((arg[i] == '"' || arg[i] == '\'') && ((i > 0 && arg[i - 1] == '\\' ) || i == 0))
 			j--;
-		else
-			path[j++] = arg[i++];
+		//else
+		//	path[j++] = arg[i++];
+		//printf("i find sega\n");
+		
 		if ((arg[i] != '"' && arg[i] != '\''))
 			path[j++] = arg[i++];
 	}
