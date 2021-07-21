@@ -1,108 +1,6 @@
 #include "../includes/minishell.h"
 
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-int ft_env(t_env *env)
-{
-	int i;
-
-	i = 0;
-	while (env->envp[i] != NULL)
-	{
-		if (ft_strncmp(env->var[i], "?", ft_strlen("?")) != 0)
-			if (env->f_equal[i] == 2)
-				printf("%s\n", env->envp[i]);
-		i++;
-	}
-	return (0);
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-int ft_cd(char **arguments, t_env *env)
-{
-	int i;
-
-	i = 0;
-	if (arguments[1] == NULL || !(strcmp(arguments[1], "~")))
-	{
-		while (ft_strncmp(env->var[i], "HOME", ft_strlen("HOME")) != 0)
-		{
-			i++;
-		}
-		chdir(env->val[i]); // в будущем сюда будет помещена переменная окружения HOME
-	}
-	else if (*(arguments + 1) != NULL)
-		chdir(arguments[1]);
-	if (errno != 0)
-		printf("minishell: cd: %s: %s\n", arguments[1], strerror(errno));
-	return (errno);
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-int ft_export(t_env *env, char **arguments)
-{
-	char **sort_envp;
-	char **sort_var;
-	char **sort_val;
-	int *f_equal;
-	char **var_val;
-	int i;
-
-	i = 0;
-	if (*(arguments + 1) != NULL)
-	{
-		add_variable(env, arguments);
-	}
-	else
-	{
-		sort_envp = arr_copy(env->envp);
-		line_sort(sort_envp);
-		while (sort_envp[i] != NULL)
-			i++;
-		sort_var = malloc(sizeof(char *) * (i + 1));
-		sort_val = malloc(sizeof(char *) * (i + 1));
-		f_equal = malloc(sizeof(int) * (i + 1));
-		i = 0;
-		while (sort_envp[i] != NULL) // сортировочка по алфавиту (заключить в кавычки все то что идет после знака равно!!!!)
-		{
-			if (ft_strchr(sort_envp[i], '='))
-			{
-				var_val = ft_split(sort_envp[i], '=');
-				sort_var[i] = var_val[0];
-				sort_val[i] = var_val[1];
-				f_equal[i] = 2;
-			}
-			else
-			{
-				sort_var[i] = ft_strdup(sort_envp[i]);
-				sort_val[i] = ft_strdup("");
-				f_equal[i] = 1;
-			}
-			if (!var_val)
-				free(var_val);
-			i++;
-		}
-		i = 0;
-		while (*(sort_envp + i))
-		{
-			if (ft_strncmp(sort_var[i], "?", ft_strlen("?")) != 0)
-			{
-				printf("declare -x %s", sort_var[i]);
-				if (f_equal[i] == 2)
-					printf("=\"%s\"", sort_val[i]);
-				printf("\n");
-			}
-			i++;
-		}
-		free_arr(sort_envp);
-	}
-	return (0);
-}
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int ft_unset(t_env *env, char **arguments)
@@ -193,22 +91,9 @@ char **ft_make_arg_n(char **arguments, t_all *all, int num) // с нормой �
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-int ft_work_old(char **arguments, t_all *all, int num)
+
+int ft_work_old(char **arg_now, t_all *all)
 {
-	char **arg_now;
-
-	// printf("num =%i\n", num);
-	if (num != -1)
-		arg_now = ft_make_arg_n(arguments, all, num);
-	else
-		arg_now = arguments;
-	/////
-	// for (int i = 0; arg_now[i]; i++) // тут выводим получившиеся строки
-	// 	printf("--%s\n", arg_now[i]);
-
-	// printf("\n");
-	// return (0);
-	/////
 	if (ft_strncmp(arg_now[0], "pwd", ft_strlen("pwd")) == 0)
 	{
 		printf("%s\n", getcwd(0, 0));
@@ -234,7 +119,7 @@ int ft_work_old(char **arguments, t_all *all, int num)
 int ft_work_command(char **arguments, t_all *all) // asdfas asdas | asd asd >> asdasd << asf asd asd asd | ls
 {
 	if (all->pipe->count_red_pip == -1)
-		return (ft_work_old(arguments, all, -1));
+		return (ft_work_old(arguments, all));
 	else
 	{
 		t_lst_pipe *tmp;
@@ -261,7 +146,7 @@ int ft_work_command(char **arguments, t_all *all) // asdfas asdas | asd asd >> a
 					dup2(tmp->fd_pid[1], 1);
 					close(tmp->fd_pid[1]);
 					close(tmp->fd_pid[0]);
-					ft_work_old(arguments, all, tmp->num);
+					ft_work_old(tmp->command, all);
 				}
 				// if (tmp->prev != NULL && tmp->next->next != NULL)
 				// {
@@ -277,7 +162,7 @@ int ft_work_command(char **arguments, t_all *all) // asdfas asdas | asd asd >> a
 					dup2(prev->fd_pid[0], 0);
 					close(prev->fd_pid[0]);
 					close(prev->fd_pid[1]);
-					ft_work_old(arguments, all, tmp->num);
+					ft_work_old(tmp->command, all);
 				}
 			}
 			if (tmp->next->next != NULL)

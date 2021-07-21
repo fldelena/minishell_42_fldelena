@@ -88,17 +88,6 @@ int main(int argc, char **argv, char **envp)
 			continue;
 		}
 
-		////////////////////
-		t_lst_pipe *tmp;
-		tmp = all->pipe;
-		while(tmp->next)
-		{
-			printf("num%i : arg = %i, count pipe/редиректов подряд= %i , тип редиректа = %i\n", tmp->num, tmp->start_arg, tmp->count_red_pip, tmp->f_red_pip);
-			tmp = tmp->next;
-		}
-		continue ;
-		////////////////////
-
 		arguments = ft_split(m_str, ';'); // разделим команду на аргументы
 		i = 0;
 		while (arguments[i] != NULL)
@@ -106,6 +95,35 @@ int main(int argc, char **argv, char **envp)
 			arguments[i] = cut_quote(arguments[i]);
 			i++;
 		}
+		
+		t_lst_pipe *tmp_123;			// заполняю в структуру 
+		int k;
+		k = 0;
+		tmp_123 = all->pipe;
+		while(tmp_123->next)
+		{
+			tmp_123->command = ft_make_arg_n(arguments, all, k);
+			tmp_123 = tmp_123->next;
+			k++;
+		}
+		////////////////////
+		// t_lst_pipe *tmp;
+		// tmp = all->pipe;
+		// while(tmp->next)
+		// {
+		// 	k = 0;
+		// 	printf("num%i : arg = %i, count pipe/редиректов подряд= %i , тип f_red_pip = %i\n", tmp->num, tmp->start_arg, tmp->count_red_pip, tmp->f_red_pip);
+		// 	printf("command : ");
+		// 	while (tmp->command[k])
+		// 	{
+		// 		printf("%s  |  ", tmp->command[k]);
+		// 		k++;
+		// 	}
+		// 	printf("\n");
+		// 	tmp = tmp->next;
+		// }
+		// continue ;
+		////////////////////
 		errno = ft_work_command(arguments, all);
 		if (errno != 0) // вывод ошибки cd реализовал внутри
 			print_error(m_str, errno);

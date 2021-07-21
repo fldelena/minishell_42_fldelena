@@ -199,12 +199,8 @@ static int ft_dollar(char **m_str, int *i, t_all *all) // можно перен�
 	return (0);
 }
 
-static int ft_add_lst(t_all *all, int c_pip, int count, int f_dir)
+int	ft_check_error(int c_pip, int f_dir)
 {
-	t_lst_pipe *tmp;
-	t_lst_pipe *tmp2;
-	int num2;
-
 	if (c_pip >= 3 && f_dir == 1)
 		return (-4);
 	if (c_pip >= 2 && f_dir == 1)
@@ -217,6 +213,17 @@ static int ft_add_lst(t_all *all, int c_pip, int count, int f_dir)
 		return (-8);
 	if (c_pip >= 3 && f_dir == 3)
 		return (-7);
+	return(0);
+}
+
+static int ft_add_lst(t_all *all, int c_pip, int count, int f_dir)
+{
+	t_lst_pipe *tmp;
+	t_lst_pipe *tmp2;
+	int num2;
+
+	if (ft_check_error(c_pip, f_dir) != 0)
+		return (ft_check_error(c_pip, f_dir));
 	num2 = 0;
 
 	tmp = all->pipe;
@@ -234,19 +241,15 @@ static int ft_add_lst(t_all *all, int c_pip, int count, int f_dir)
 		tmp->prev = NULL;
 		tmp->next = malloc(sizeof(t_lst_pipe));
 		tmp2 = tmp;
+		tmp->command = NULL;
 		tmp = tmp->next;
 		tmp->prev = tmp2;
 		tmp->next = NULL;
+		tmp->command = NULL;
 	}
 
-	// tmp = all->pipe;
-	// while (tmp->next != NULL)
-	// {
-	// 	num2++;
-	// 	tmp = tmp->next;
-	// }
-
-	tmp->f_red_pip = f_dir;
+	tmp->prev->f_red_pip = f_dir;
+	tmp->f_red_pip = 0;
 	tmp->num = num2;
 	tmp->count_red_pip = c_pip;
 	tmp->start_arg = count;
@@ -255,6 +258,7 @@ static int ft_add_lst(t_all *all, int c_pip, int count, int f_dir)
 	tmp = tmp->next;
 	tmp->prev = tmp2;
 	tmp->next = NULL;
+	tmp->command = NULL;
 	tmp->num = -2;
 	tmp->start_arg = -1;
 	return (0);

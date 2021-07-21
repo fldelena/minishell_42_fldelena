@@ -25,6 +25,7 @@ t_lst_pipe	*pipe_lst_malloc(void)
 	pipe->f_red_pip = 0;
 	pipe->start_arg = 0;
 	pipe->num = -1;
+	pipe->command = NULL;
 	pipe->next = NULL;
 	pipe->prev = NULL;
 	return (pipe);

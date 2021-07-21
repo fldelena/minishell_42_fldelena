@@ -18,13 +18,21 @@ void free_main(char **m_str, char **arguments, t_all *all)
 
 	while (all->pipe->next)
 	{
+		i = 0;
 		tmp = all->pipe;
 		all->pipe = all->pipe->next;
+		while(tmp->command && tmp->command[i])
+		{
+			free(tmp->command[i]);
+			i++;
+		}
+		free(tmp->command);
 		free(tmp);
 	}
 	free(all->pipe);
 	all->pipe = malloc(sizeof(t_lst_pipe));
 	all->pipe->next = NULL;
+	all->pipe->command = NULL;
 	all->pipe->prev = NULL;
 	all->pipe->num = -1;
 	all->pipe->count_red_pip = -1;
@@ -32,12 +40,13 @@ void free_main(char **m_str, char **arguments, t_all *all)
 	if (m_str[0] != NULL)
 	{
 		free(m_str[0]);
-		while (arguments != NULL && arguments[i] != NULL)
-		{
-			free(arguments[i]);
-			i++;
-		}
-		if (arguments != NULL)
-			free(arguments);
+		(void)arguments;
+		// while (arguments != NULL && arguments[i] != NULL)
+		// {
+		// 	free(arguments[i]);
+		// 	i++;
+		// }
+		// if (arguments != NULL)
+		// 	free(arguments);
 	}
 }

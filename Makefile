@@ -7,6 +7,9 @@ SRC			=	minishell.c \
 				work_command.c \
 				work_command_utils.c \
 				ft_echo.c \
+				ft_env.c \
+				ft_cd.c \
+				ft_export.c \
 				mallocs.c \
 				pipe.c \
 				binary_work.c \
