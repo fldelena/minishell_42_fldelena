@@ -199,7 +199,7 @@ static int ft_dollar(char **m_str, int *i, t_all *all) // можно перен�
 	return (0);
 }
 
-int	ft_check_error(int c_pip, int f_dir)
+int ft_check_error(int c_pip, int f_dir)
 {
 	if (c_pip >= 3 && f_dir == 1)
 		return (-4);
@@ -213,7 +213,7 @@ int	ft_check_error(int c_pip, int f_dir)
 		return (-8);
 	if (c_pip >= 3 && f_dir == 3)
 		return (-7);
-	return(0);
+	return (0);
 }
 
 static int ft_add_lst(t_all *all, int c_pip, int count, int f_dir)

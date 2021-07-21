@@ -41,10 +41,6 @@ int binary_work(t_all *all, char **arguments)
 	int i;
 
 	i = 0;
-	// if (idx != 0)
-	// 	ft()
-	// else
-
 	if (exception(arguments) == 1)
 		return (0);
 	while (ft_strncmp(all->env->var[i], "PATH", ft_strlen("PATH")) != 0) // ищем PATH
@@ -61,16 +57,24 @@ int binary_work(t_all *all, char **arguments)
 		free(pathway); // картофель free
 		i++;
 	}
-	pidor = fork();
-	if (!pidor)
+	if (all->pipe->next == NULL)
 	{
-		if (pathways[i] != NULL)
-			execve(pathway, arguments, 0); // запускаем нашу программку
-		else if (ft_help(arguments[0]))
-			execve(arguments[0], arguments, 0);
-		else
-			return (127);
+		pidor = fork();
+		if (!pidor)
+		{
+			if (pathways[i] != NULL)
+				execve(pathway, arguments, 0); // запускаем нашу программку
+			else if (ft_help(arguments[0]))
+				execve(arguments[0], arguments, 0);
+			else
+				return (127);
+		}
+		waitpid(pidor, 0, 0);
 	}
-	waitpid(pidor, 0, 0);
+	else
+	{
+		execve(pathway, arguments, 0); // запускаем нашу программку
+	}
+	// execve(arguments[0], arguments, 0);
 	return (errno);
 }

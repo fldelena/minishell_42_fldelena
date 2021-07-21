@@ -95,12 +95,12 @@ int main(int argc, char **argv, char **envp)
 			arguments[i] = cut_quote(arguments[i]);
 			i++;
 		}
-		
-		t_lst_pipe *tmp_123;			// заполняю в структуру 
+
+		t_lst_pipe *tmp_123; // заполняю в структуру
 		int k;
 		k = 0;
 		tmp_123 = all->pipe;
-		while(tmp_123->next)
+		while (tmp_123->next)
 		{
 			tmp_123->command = ft_make_arg_n(arguments, all, k);
 			tmp_123 = tmp_123->next;
@@ -109,7 +109,7 @@ int main(int argc, char **argv, char **envp)
 		////////////////////
 		// t_lst_pipe *tmp;
 		// tmp = all->pipe;
-		// while(tmp->next)
+		// while (tmp->next)
 		// {
 		// 	k = 0;
 		// 	printf("num%i : arg = %i, count pipe/редиректов подряд= %i , тип f_red_pip = %i\n", tmp->num, tmp->start_arg, tmp->count_red_pip, tmp->f_red_pip);
@@ -122,7 +122,7 @@ int main(int argc, char **argv, char **envp)
 		// 	printf("\n");
 		// 	tmp = tmp->next;
 		// }
-		// continue ;
+		// continue;
 		////////////////////
 		errno = ft_work_command(arguments, all);
 		if (errno != 0) // вывод ошибки cd реализовал внутри

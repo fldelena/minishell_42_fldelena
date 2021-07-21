@@ -1,6 +1,5 @@
 #include "../includes/minishell.h"
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int ft_unset(t_env *env, char **arguments)
@@ -91,11 +90,11 @@ char **ft_make_arg_n(char **arguments, t_all *all, int num) // с нормой �
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 int ft_work_old(char **arg_now, t_all *all)
 {
 	if (ft_strncmp(arg_now[0], "pwd", ft_strlen("pwd")) == 0)
 	{
+		// write(0, getcwd(0, 0), ft_strlen(getcwd(0, 0)));
 		printf("%s\n", getcwd(0, 0));
 		return (errno);
 	}
@@ -133,52 +132,47 @@ int ft_work_command(char **arguments, t_all *all) // asdfas asdas | asd asd >> a
 		// }
 		// return (0);
 		////////////////////
+
+		t_lst_pipe *prev;
 		while (tmp->next) // ->next
 		{
 
 			if (tmp->next != NULL)
 				pipe(tmp->fd_pid);
 			tmp->pid = fork();
+
+			prev = tmp->prev;
 			if (!tmp->pid) // если отдаём
 			{
-				if (tmp->next->next != NULL)
+				// if (редирект)
+				// {
+				// }
+				if (tmp->f_red_pip == 1)
 				{
 					dup2(tmp->fd_pid[1], 1);
 					close(tmp->fd_pid[1]);
 					close(tmp->fd_pid[0]);
-					ft_work_old(tmp->command, all);
 				}
-				// if (tmp->prev != NULL && tmp->next->next != NULL)
-				// {
-				// 	dup2(tmp->prev->fd_pid[0], 0);
-				// 	close(tmp->prev->fd_pid[0]);
-				// 	close(tmp->prev->fd_pid[1]);
-				// 	ft_work_old(arguments, all, tmp->num);
-				// }
-				if (tmp->prev != NULL)
+				if (prev && prev->f_red_pip == 1)
 				{
-					t_lst_pipe *prev;
-					prev = tmp->prev;
 					dup2(prev->fd_pid[0], 0);
 					close(prev->fd_pid[0]);
 					close(prev->fd_pid[1]);
-					ft_work_old(tmp->command, all);
 				}
+				ft_work_old(tmp->command, all);
 			}
-			if (tmp->next->next != NULL)
+			if (tmp->f_red_pip == 1)
 				close(tmp->fd_pid[1]);
-			// if (tmp->prev != NULL && tmp->next != NULL)
-			// {
-			// 	close(tmp->prev->fd_pid[0]);
-			// 	close(tmp->fd_pid[1]);
-			// }
-			if (tmp->prev != NULL)
-				close(tmp->fd_pid[0]);
+			if (prev && prev->f_red_pip == 1)
+				close(prev->fd_pid[0]);
 			tmp = tmp->next;
 		}
-		wait(0);
-		wait(0);
-
+		tmp = all->pipe;
+		while (tmp->next)
+		{
+			waitpid(tmp->pid, 0, 0);
+			tmp = tmp->next;
+		}
 	}
 	return (errno);
 }
