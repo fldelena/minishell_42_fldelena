@@ -6,6 +6,7 @@ SRC			=	minishell.c \
 				make_arguments.c \
 				work_command.c \
 				work_command_utils.c \
+				ft_echo.c \
 				mallocs.c \
 				pipe.c \
 				binary_work.c \

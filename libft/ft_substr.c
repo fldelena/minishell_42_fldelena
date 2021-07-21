@@ -2,11 +2,11 @@
 
 char	*ft_substr(char *s)
 {
-	char *str;
-	int i;
+	char	*str;
+	int		i;
 
 	if (!s)
-		return(NULL);
+		return (NULL);
 	i = -1;
 	str = malloc(sizeof(char) * (ft_strlen(s) + 1));
 	if (!str)

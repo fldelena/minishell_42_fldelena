@@ -1,28 +1,6 @@
 #include "../includes/minishell.h"
 
-int ft_echo(int fd, char **arguments)
-{
-	int i;
-	int n;
 
-	i = 1;
-	n = 0;
-	while (is_n_flag(arguments[i]))
-	{
-		i++;
-		n = 1;
-	}
-	while (*(arguments + i))
-	{
-		write(fd, arguments[i], ft_strlen(arguments[i]));
-		if (*(arguments + i + 1) != NULL)
-			write(fd, " ", 1);
-		i++;
-	}
-	if (!n)
-		write(fd, "\n", 1);
-	return (0);
-}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -155,7 +133,7 @@ int ft_exit(char **arguments)
 		exit(errno);
 }
 
-char **ft_make_arg_n(char **arguments, t_all *all, int num)  // с нормой этого дерьма пусть возится gvenonat
+char **ft_make_arg_n(char **arguments, t_all *all, int num) // с нормой этого дерьма пусть возится gvenonat
 {
 	int count; // количество сргументов команды
 	int count_tmp_arg;
@@ -171,20 +149,20 @@ char **ft_make_arg_n(char **arguments, t_all *all, int num)  // с нормой 
 		while (tmp->next)
 		{
 			if (tmp->num == num)
-				break ;
+				break;
 			tmp = tmp->next;
 		}
 		count = tmp->start_arg;
 		tmp_help = tmp->next;
-		if (tmp->next && tmp_help->next)		// сюда захожу когда средние пайпы
+		if (tmp->next && tmp_help->next) // сюда захожу когда средние пайпы
 		{
 			tmp = tmp->next;
 			count = tmp->start_arg - count;
 		}
-		else			// когда самый последнйи пайп
+		else // когда самый последнйи пайп
 		{
 			i = 0;
-			while (arguments[count])		// ls ls | cat cat | me me | pwd pwd pwd pwd	
+			while (arguments[count]) // ls ls | cat cat | me me | pwd pwd pwd pwd
 			{
 				count++;
 				i++;
@@ -200,7 +178,8 @@ char **ft_make_arg_n(char **arguments, t_all *all, int num)  // с нормой 
 			count_tmp_arg = tmp->start_arg;
 	}
 	else
-		count = tmp->start_arg;
+		count = tmp->next->start_arg;
+	// printf("count  = %i\n", count);
 	arg_now = malloc(sizeof(char *) * count + 1);
 	i = 0;
 	while (i != count)
@@ -218,13 +197,16 @@ int ft_work_old(char **arguments, t_all *all, int num)
 {
 	char **arg_now;
 
+	// printf("num =%i\n", num);
 	if (num != -1)
 		arg_now = ft_make_arg_n(arguments, all, num);
 	else
 		arg_now = arguments;
 	/////
-	// for (int i = 0; arg_now[i]; i++)			// тут выводим получившиеся строки
+	// for (int i = 0; arg_now[i]; i++) // тут выводим получившиеся строки
 	// 	printf("--%s\n", arg_now[i]);
+
+	// printf("\n");
 	// return (0);
 	/////
 	if (ft_strncmp(arg_now[0], "pwd", ft_strlen("pwd")) == 0)
@@ -249,7 +231,7 @@ int ft_work_old(char **arguments, t_all *all, int num)
 	return (127);
 }
 
-int ft_work_command(char **arguments, t_all *all)	// asdfas asdas | asd asd >> asdasd << asf asd asd asd | ls
+int ft_work_command(char **arguments, t_all *all) // asdfas asdas | asd asd >> asdasd << asf asd asd asd | ls
 {
 	if (all->pipe->count_red_pip == -1)
 		return (ft_work_old(arguments, all, -1));
@@ -257,63 +239,61 @@ int ft_work_command(char **arguments, t_all *all)	// asdfas asdas | asd asd >> a
 	{
 		t_lst_pipe *tmp;
 		tmp = all->pipe;
-		////////////////////					то, как правильно подавать пайпы в функцию
+		////////////////////					то, как правильно подавать пайпы в функцию // работу программы
 		// while (tmp->next)
 		// {
-		// 	ft_work_old(arguments, all, tmp->num - 1);
+		// 	ft_work_old(arguments, all, tmp->num);
 		// 	printf("\n");
 		// 	tmp = tmp->next;
 		// }
-		// tmp = tmp->prev;
-		// ft_work_old(arguments, all, tmp->num);	// ls ls | cat cat | me me | pwd pwd pwd pwd	
 		// return (0);
 		////////////////////
-		while (tmp->next)
+		while (tmp->next) // ->next
 		{
-			pipe(tmp->fd_pid);
+
+			if (tmp->next != NULL)
+				pipe(tmp->fd_pid);
 			tmp->pid = fork();
 			if (!tmp->pid) // если отдаём
 			{
-				if (tmp->prev == NULL)
+				if (tmp->next->next != NULL)
 				{
 					dup2(tmp->fd_pid[1], 1);
 					close(tmp->fd_pid[1]);
 					close(tmp->fd_pid[0]);
-					ft_work_old(arguments, all, tmp->num - 1);
-				}
-				if (tmp->prev != NULL && tmp->next != NULL)
-				{
-					dup2(tmp->fd_pid[1], 1);
-					close(tmp->fd_pid[1]);
-					close(tmp->fd_pid[0]);
-
-					dup2(tmp->prev->fd_pid[0], 0);
-					close(tmp->prev->fd_pid[0]);
-					close(tmp->prev->fd_pid[1]);
-					ft_work_old(arguments, all, tmp->num - 1);
-				}
-				if (tmp->prev != NULL && tmp->next == NULL)
-				{
-					dup2(tmp->fd_pid[0], 0);
-					close(tmp->fd_pid[0]);
-					close(tmp->fd_pid[1]);
-					tmp = tmp->prev;			// мб так, а мб и не так :) см вывод пайпов сверху
 					ft_work_old(arguments, all, tmp->num);
-					tmp = tmp->next;
+				}
+				// if (tmp->prev != NULL && tmp->next->next != NULL)
+				// {
+				// 	dup2(tmp->prev->fd_pid[0], 0);
+				// 	close(tmp->prev->fd_pid[0]);
+				// 	close(tmp->prev->fd_pid[1]);
+				// 	ft_work_old(arguments, all, tmp->num);
+				// }
+				if (tmp->prev != NULL)
+				{
+					t_lst_pipe *prev;
+					prev = tmp->prev;
+					dup2(prev->fd_pid[0], 0);
+					close(prev->fd_pid[0]);
+					close(prev->fd_pid[1]);
+					ft_work_old(arguments, all, tmp->num);
 				}
 			}
-			if (tmp->prev == NULL)
+			if (tmp->next->next != NULL)
 				close(tmp->fd_pid[1]);
-			if (tmp->prev != NULL && tmp->next != NULL)
-			{
-				close(tmp->prev->fd_pid[0]);
-				close(tmp->fd_pid[1]);
-			}
-			if (tmp->prev != NULL && tmp->next == NULL)
+			// if (tmp->prev != NULL && tmp->next != NULL)
+			// {
+			// 	close(tmp->prev->fd_pid[0]);
+			// 	close(tmp->fd_pid[1]);
+			// }
+			if (tmp->prev != NULL)
 				close(tmp->fd_pid[0]);
-
 			tmp = tmp->next;
 		}
+		wait(0);
+		wait(0);
+
 	}
 	return (errno);
 }

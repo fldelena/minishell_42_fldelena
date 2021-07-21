@@ -1,27 +1,31 @@
 #include "libft.h"
 
-static int		size_n(int a)
+static int	size_n(int a)
 {
-	int		size;
-	int		b;
+	int	size;
+	int	b;
 
 	b = a;
 	size = 1;
 	if (a < 0)
 		size++;
-	while ((b /= 10) != 0)
+	b /= 10;
+	while (b != 0)
+	{
+		b /= 10;
 		size++;
+	}
 	return (size);
 }
 
-static int		sign_n(int a)
+static int	sign_n(int a)
 {
 	if (a < 0)
 		return (-1);
 	return (1);
 }
 
-char			*ft_itoa(int a)
+char	*ft_itoa(int a)
 {
 	int		size;
 	int		sign;
@@ -32,7 +36,8 @@ char			*ft_itoa(int a)
 	j = 0;
 	size = size_n(a);
 	sign = sign_n(a);
-	if (!(str = (char *)malloc(sizeof(char) * (size + 1))))
+	str = (char *)malloc(sizeof(char) * (size + 1));
+	if (!str)
 		return (NULL);
 	str[size] = '\0';
 	if (a < 0)

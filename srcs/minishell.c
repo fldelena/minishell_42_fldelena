@@ -89,16 +89,16 @@ int main(int argc, char **argv, char **envp)
 		}
 
 		////////////////////
-		// t_lst_pipe *tmp;
-		// tmp = all->pipe;
-		// while(tmp->next)
-		// {
-		// 	printf("num%i : arg = %i, count pipe/редиректов подряд= %i , тип редиректа = %i\n", tmp->num, tmp->start_arg, tmp->count_red_pip, tmp->f_red_pip);
-		// 	tmp = tmp->next;
-		// }
-		// continue ;
+		t_lst_pipe *tmp;
+		tmp = all->pipe;
+		while(tmp->next)
+		{
+			printf("num%i : arg = %i, count pipe/редиректов подряд= %i , тип редиректа = %i\n", tmp->num, tmp->start_arg, tmp->count_red_pip, tmp->f_red_pip);
+			tmp = tmp->next;
+		}
+		continue ;
 		////////////////////
-		
+
 		arguments = ft_split(m_str, ';'); // разделим команду на аргументы
 		i = 0;
 		while (arguments[i] != NULL)

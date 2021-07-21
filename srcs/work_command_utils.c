@@ -19,19 +19,6 @@ char	**arr_copy(char **envp)				// функция копирующая масс�
 	return(my_envp);
 }
 
-int		is_n_flag(char *s)					// функция для корректной работы -n в echo
-{
-	int i = 0;
-	while (s[++i])
-	{
-		if (s[i] != 'n' || s[0] != '-')
-			return (0);
-	}
-	if (ft_strlen(s) == 1)
-		return (0);
-	return (1);
-}
-
 
 void	line_sort(char **envp)				// сортирует строки в алфавитном порядке для export
 {
@@ -326,10 +313,10 @@ void	del_variable(t_env *env, char **arguments)
 		word_count++;
 	while (*(arguments + i))
 	{
-		args_count++;					// а тут количество аргументов которые мы подаем
+		args_count++;
 		i++;
 	}
-	env->envp = del(env->var, env->envp, arguments, (word_count - args_count));				// suka suka suka
+	env->envp = del(env->var, env->envp, arguments, (word_count - args_count));
 	env->val = del(env->var, env->val, arguments, (word_count - args_count));
 	env->var = del(env->var, env->var, arguments, (word_count - args_count));
 	env->f_equal = del_f_equal(env, arguments, (word_count - args_count));
@@ -337,20 +324,19 @@ void	del_variable(t_env *env, char **arguments)
 
 void	make_envp(t_all *all, char **envp)
 {
-	char **arr;
-	int i;
+	char	**arr;
+	int		i;
 
 	i = 0;
 	while (envp[i])
 	{
-		all->env->envp[i] = strdup(*(envp + i)); // при полной работе цикла первые строки масива
+		all->env->envp[i] = ft_strdup(*(envp + i));
 		if(ft_strchr(all->env->envp[i], '='))
 		{
 			all->env->f_equal[i] = 2;
 			arr = ft_split(*(envp + i), '=');
 			all->env->var[i] = ft_strdup(arr[0]);
 			all->env->val[i] = ft_strdup(arr[1]);
-
 		}
 		else
 		{

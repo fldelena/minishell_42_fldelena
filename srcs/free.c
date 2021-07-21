@@ -26,6 +26,7 @@ void free_main(char **m_str, char **arguments, t_all *all)
 	all->pipe = malloc(sizeof(t_lst_pipe));
 	all->pipe->next = NULL;
 	all->pipe->prev = NULL;
+	all->pipe->num = -1;
 	all->pipe->count_red_pip = -1;
 	i = 0;
 	if (m_str[0] != NULL)
