@@ -48,6 +48,8 @@ typedef struct s_all
 {
 	t_env *env;
 	t_lst_pipe *pipe;
+	int	o_l_quote;
+	int	t_l_quote;
 } t_all;
 
 int		ft_echo(int fd, char **arguments);
@@ -71,5 +73,16 @@ void	pipe_found(t_lst_pipe *pipe, char *arr);
 int		binary_work(t_all *all, char **arguments);
 char 	**ft_make_arg_n(char **arguments, t_all *all, int num);
 // void			ft_pipe(char **arguments);
+
+char	*ft_help1(char *m_str, int *i, int count);
+char	*ft_help2(char *m_str, int *i, int count);
+int	ft_count_env(char *m_str, int *i, int l_dollar);
+int	ft_count_befor(int count, char *m_str, char *now_env, int i);
+int	ft_before_env(char *m_str, char *now_env, int count, char *m2);
+void	ft_write_env(int i, char *m2, t_all *all, int *j_m);
+void	ft_end_rewrite(char *m2, char *m_str, int j_m, int j_str);
+int	find_env_in_all(t_all *all, char *now_env);
+int	ft_rewrite(char **m_str, char *now_env, t_all *all, int count);
+int	ft_dollar(char **m_str, int *i, t_all *all);
 
 #endif

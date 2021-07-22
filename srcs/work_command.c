@@ -76,7 +76,6 @@ char **ft_make_arg_n(char **arguments, t_all *all, int num) // с нормой �
 	}
 	else
 		count = tmp->next->start_arg;
-	// printf("count  = %i\n", count);
 	arg_now = malloc(sizeof(char *) * count + 1);
 	i = 0;
 	while (i != count)

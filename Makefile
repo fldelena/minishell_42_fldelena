@@ -1,8 +1,9 @@
 NAME		=	minishell
 
 SRCFD		=	srcs
+PARSER_PATH	=	folder_check_comm
+
 SRC			=	minishell.c \
-				check_command.c \
 				make_arguments.c \
 				work_command.c \
 				work_command_utils.c \
@@ -15,8 +16,11 @@ SRC			=	minishell.c \
 				binary_work.c \
 				free.c
 
-SRCS = $(addprefix $(SRCFD)/, $(SRC))
+PARSER_FILE	=	check_command.c \
+				dollar_main.c \
+				dollar_utils.c
 
+SRCS 	= $(addprefix $(SRCFD)/, $(SRC)) $(addprefix $(PARSER_PATH)/, $(PARSER_FILE))
 
 OBJS		=	$(SRCS:.c=.o)
 LIBFT		=	libft.a
@@ -38,7 +42,7 @@ $(LIBFT): libft/
 			@mv libft/$(LIBFT) .
 
 clean:
-			$(RM) $(OBJS)
+			$(RM) $(OBJS) 
 			$(MAKE) -C libft/ fclean
 			$(RM) $(LIBFT)
 
