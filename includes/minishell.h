@@ -41,6 +41,12 @@ typedef struct s_lst_pipe
 	struct s_lst_pipe *prev;		// предыдущий
 } t_lst_pipe;
 
+typedef struct s_parser
+{
+	int	o_l_quote;
+	int	t_l_quote;
+	int count;
+} t_parser;
 
 // главная структура
 
@@ -48,8 +54,8 @@ typedef struct s_all
 {
 	t_env *env;
 	t_lst_pipe *pipe;
-	int	o_l_quote;
-	int	t_l_quote;
+	// t_parser *parser;
+	t_parser parser;
 } t_all;
 
 int		ft_echo(int fd, char **arguments);
@@ -84,5 +90,13 @@ void	ft_end_rewrite(char *m2, char *m_str, int j_m, int j_str);
 int	find_env_in_all(t_all *all, char *now_env);
 int	ft_rewrite(char **m_str, char *now_env, t_all *all, int count);
 int	ft_dollar(char **m_str, int *i, t_all *all);
+int	ft_check_pip_red_help2(char **m_str, t_all *all, int *i, int *c_pip);
+int	ft_check_pip_red_help1(char **m_str, t_all *all, int *i, int *c_pip);
+int	ft_add_lst(t_all *all, int c_pip, int count, int f_dir);
+void	ft_add_lst_2(t_lst_pipe *tmp, int c_pip, int count, int f_dir);
+void	ft_lst_null(t_lst_pipe **tmp, int *num2);
+int	ft_check_error(int c_pip, int f_dir);
+void	ft_first(char *m_str, int *t_l_quote, int *o_l_quote, int *i);
+int	ft_check_pip_red(char **m_str, t_all *all, int *i);
 
 #endif

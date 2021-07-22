@@ -47,6 +47,10 @@ void init_errno(t_all *all)
 	arguments[1] = dollar;
 	arguments[2] = NULL;
 	add_variable(all->env, arguments);
+
+	all->parser.count = 0;
+	all->parser.o_l_quote = 0;
+	all->parser.t_l_quote = 0;
 	errno = 0;
 }
 

@@ -31,6 +31,17 @@ t_lst_pipe	*pipe_lst_malloc(void)
 	return (pipe);
 }
 
+// t_parser	*parser_malloc(void)
+// {
+// 	t_parser	*parser;
+
+// 	parser = malloc(sizeof(t_parser));
+// 	parser->count = 0;
+// 	parser->o_l_quote = 0;
+// 	parser->t_l_quote = 0;
+// 	return(parser);
+// }
+
 t_all	*main_struct_malloc(char **envp)
 {
 	t_all	*all;
@@ -38,5 +49,6 @@ t_all	*main_struct_malloc(char **envp)
 	all = malloc(sizeof(t_all));
 	all->env = env_malloc(envp);
 	all->pipe = pipe_lst_malloc();
+	// all->parser = parser_malloc();
 	return (all);
 }

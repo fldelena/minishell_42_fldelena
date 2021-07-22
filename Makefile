@@ -18,7 +18,8 @@ SRC			=	minishell.c \
 
 PARSER_FILE	=	check_command.c \
 				dollar_main.c \
-				dollar_utils.c
+				dollar_utils.c \
+				make_list.c
 
 SRCS 	= $(addprefix $(SRCFD)/, $(SRC)) $(addprefix $(PARSER_PATH)/, $(PARSER_FILE))
 
