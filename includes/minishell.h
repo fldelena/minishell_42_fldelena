@@ -59,16 +59,16 @@ typedef struct s_all
 	t_parser parser;
 } t_all;
 
-int		ft_echo(int fd, char **arguments);
+int		ft_echo(t_all *all, int fd, char **arguments);
 int		ft_check_command(char **m_str, t_all *all);
 char	*cut_quote(char *arg);
 int		is_n_flag(char *s);
 void	add_variable(t_env *env, char **arguments);
 int		ft_work_command(char **arguments, t_all *all);
 void	free_main(char **m_str, char **arguments, t_all *all);
-int		ft_cd(char **arguments, t_env *env);
-int		ft_env(t_env *env);
-int 	ft_export(t_env *env, char **arguments);
+int		ft_cd(char **arguments, t_all *all);
+int		ft_env(t_all *all);
+int 	ft_export(t_all *all, char **arguments);
 void	line_sort(char **envp);
 void	add_variable(t_env *env, char **arguments);
 void	del_variable(t_env *env, char **arguments);

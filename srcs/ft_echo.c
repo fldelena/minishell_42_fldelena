@@ -13,7 +13,7 @@ int		is_n_flag(char *s)					// функция для корректной раб
 	return (1);
 }
 
-int ft_echo(int fd, char **arguments)
+int ft_echo(t_all *all, int fd, char **arguments)
 {
 	int i;
 	int n;
@@ -34,5 +34,7 @@ int ft_echo(int fd, char **arguments)
 	}
 	if (!n)
 		write(fd, "\n", 1);
+	if (all->pipe->next != NULL)
+		exit(0);
 	return (0);
 }

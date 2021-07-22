@@ -219,7 +219,7 @@ void	line_sort(char **envp)
 }
 
 
-int ft_export(t_env *env, char **arguments)
+int ft_export(t_all *all, char **arguments)
 {
 	char **sort_envp;
 	char **sort_var;
@@ -231,11 +231,11 @@ int ft_export(t_env *env, char **arguments)
 	i = 0;
 	if (*(arguments + 1) != NULL)
 	{
-		add_variable(env, arguments);
+		add_variable(all->env, arguments);
 	}
 	else
 	{
-		sort_envp = arr_copy(env->envp);
+		sort_envp = arr_copy(all->env->envp);
 		line_sort(sort_envp);
 		while (sort_envp[i] != NULL)
 			i++;
@@ -276,5 +276,7 @@ int ft_export(t_env *env, char **arguments)
 		}
 		free_arr(sort_envp);
 	}
+	if (all->pipe->next != NULL)
+		exit(0);
 	return (0);
 }

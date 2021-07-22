@@ -1,13 +1,11 @@
 #include "../includes/minishell.h"
 
-int ft_unset(t_env *env, char **arguments)
+int ft_unset(t_all *all, char **arguments)
 {
 	if (*(arguments + 1) != NULL)
-		del_variable(env, arguments);
-	else
-	{
-		//вроде тут ничего не должно быть, на всякий случай оставлю
-	}
+		del_variable(all->env, arguments);
+	if (all->pipe->next != NULL)
+		exit(0);
 	return (0);
 }
 
@@ -94,15 +92,15 @@ int ft_work_old(char **arg_now, t_all *all)
 		return (errno);
 	}
 	else if (ft_strncmp(arg_now[0], "echo", ft_strlen("echo")) == 0)
-		return (ft_echo(1, arg_now));
+		return (ft_echo(all, 1, arg_now));
 	else if (ft_strncmp(arg_now[0], "cd", ft_strlen("cd")) == 0)
-		return (ft_cd(arg_now, all->env));
+		return (ft_cd(arg_now, all));
 	else if (ft_strncmp(arg_now[0], "env", ft_strlen("env")) == 0)
-		return (ft_env(all->env));
+		return (ft_env(all));
 	else if (ft_strncmp(arg_now[0], "export", ft_strlen("export")) == 0)
-		return (ft_export(all->env, arg_now));
+		return (ft_export(all, arg_now));
 	else if (ft_strncmp(arg_now[0], "unset", ft_strlen("unset")) == 0)
-		return (ft_unset(all->env, arg_now));
+		return (ft_unset(all, arg_now));
 	else if (ft_strncmp(arg_now[0], "exit", ft_strlen("exit")) == 0) // gvenonat
 		ft_exit(arg_now);
 	else
