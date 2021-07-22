@@ -1,7 +1,5 @@
 #include "../includes/minishell.h"
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 int ft_unset(t_env *env, char **arguments)
 {
 	if (*(arguments + 1) != NULL)
@@ -12,8 +10,6 @@ int ft_unset(t_env *env, char **arguments)
 	}
 	return (0);
 }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int ft_exit(char **arguments)
 {
@@ -87,8 +83,6 @@ char **ft_make_arg_n(char **arguments, t_all *all, int num) // с нормой �
 	return (arg_now);
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 int ft_work_old(char **arg_now, t_all *all)
 {
 	if (ft_strncmp(arg_now[0], "pwd", ft_strlen("pwd")) == 0)
@@ -131,9 +125,8 @@ int ft_work_command(char **arguments, t_all *all) // asdfas asdas | asd asd >> a
 		// }
 		// return (0);
 		////////////////////
-
 		t_lst_pipe *prev;
-		while (tmp->next) // ->next
+		while (tmp->next)
 		{
 
 			if (tmp->next != NULL)
@@ -143,9 +136,22 @@ int ft_work_command(char **arguments, t_all *all) // asdfas asdas | asd asd >> a
 			prev = tmp->prev;
 			if (!tmp->pid) // если отдаём
 			{
-				// if (редирект)
+				///////// редиректы
+				// if (tmp->prev != NULL && tmp->prev->f_red_pip == 2)
 				// {
+				// if (tmp->count_red_pip == 1)
+                // 	
+            	// else
+                	// 
 				// }
+				// else if (tmp->prev != NULL && tmp->f_red_pip == 3)
+				// {
+				// 	if (tmp->count_red_pip == 1)
+                // 		
+				// else         << хз пока
+				//     ;	
+				// }
+				///////////
 				if (tmp->f_red_pip == 1)
 				{
 					dup2(tmp->fd_pid[1], 1);

@@ -110,13 +110,19 @@ int main(int argc, char **argv, char **envp)
 			tmp_123 = tmp_123->next;
 			k++;
 		}
+		ft_open_redirect(all);
+		if (errno != 0)
+		{
+			printf("minishell: %s\n", strerror(errno));
+			continue ;
+		}	
 		////////////////////
 		// t_lst_pipe *tmp;
 		// tmp = all->pipe;
 		// while (tmp->next)
 		// {
 		// 	k = 0;
-		// 	printf("num%i : arg = %i, count pipe/редиректов подряд= %i , тип f_red_pip = %i\n", tmp->num, tmp->start_arg, tmp->count_red_pip, tmp->f_red_pip);
+		// 	printf("num%i : arg = %i, count pipe (редиректов подряд)= %i , тип f_red_pip = %i\n", tmp->num, tmp->start_arg, tmp->count_red_pip, tmp->f_red_pip);
 		// 	printf("command : ");
 		// 	while (tmp->command[k])
 		// 	{
