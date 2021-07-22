@@ -100,5 +100,6 @@ int	ft_check_error(int c_pip, int f_dir);
 void	ft_first(char *m_str, int *t_l_quote, int *o_l_quote, int *i);
 int	ft_check_pip_red(char **m_str, t_all *all, int *i);
 int ft_open_redirect(t_all *all);
+int exception(char **arguments);
 
 #endif

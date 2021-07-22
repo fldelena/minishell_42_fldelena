@@ -89,6 +89,8 @@ int ft_work_old(char **arg_now, t_all *all)
 	{
 		// write(0, getcwd(0, 0), ft_strlen(getcwd(0, 0)));
 		printf("%s\n", getcwd(0, 0));
+		if (all->pipe->next != NULL)
+			exit(0);
 		return (errno);
 	}
 	else if (ft_strncmp(arg_now[0], "echo", ft_strlen("echo")) == 0)
@@ -137,19 +139,17 @@ int ft_work_command(char **arguments, t_all *all) // asdfas asdas | asd asd >> a
 			if (!tmp->pid) // если отдаём
 			{
 				///////// редиректы
-				// if (tmp->prev != NULL && tmp->prev->f_red_pip == 2)
+				// if (tmp->f_red_pip == 2)
 				// {
-				// if (tmp->count_red_pip == 1)
-                // 	
-            	// else
-                	// 
+				// 	dup2(tmp->fd_pid[1], tmp->next->fd_redirect);
+				// 	close(tmp->fd_pid[1]);
+				// 	close(tmp->fd_pid[0]);
 				// }
-				// else if (tmp->prev != NULL && tmp->f_red_pip == 3)
+				// if (tmp->prev != NULL && tmp->prev->f_red_pip == 3 && tmp->prev->count_red_pip == 1)
 				// {
-				// 	if (tmp->count_red_pip == 1)
-                // 		
-				// else         << хз пока
-				//     ;	
+				// 	dup2(tmp->fd_pid[1], tmp->next->fd_redirect);
+				// 	close(tmp->fd_pid[1]);
+				// 	close(tmp->fd_pid[0]);
 				// }
 				///////////
 				if (tmp->f_red_pip == 1)
@@ -170,6 +170,8 @@ int ft_work_command(char **arguments, t_all *all) // asdfas asdas | asd asd >> a
 				close(tmp->fd_pid[1]);
 			if (prev && prev->f_red_pip == 1)
 				close(prev->fd_pid[0]);
+			// if (tmp->f_red_pip == 2)
+			// 	close(tmp->next->fd_redirect);
 			tmp = tmp->next;
 		}
 		tmp = all->pipe;
