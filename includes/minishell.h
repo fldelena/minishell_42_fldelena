@@ -13,6 +13,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#include <signal.h>
+
 #define TRUE 1
 
 // структура для окружения
@@ -62,7 +64,7 @@ typedef struct s_all
 int		ft_check_command(char **m_str, t_all *all);
 int		ft_work_command(char **arguments, t_all *all);
 void	free_main(char **m_str, char **arguments, t_all *all);
-void	add_variable(t_env *env, char **arguments);             //
+void	add_variable(t_env *env, char **arguments);
 char	*cut_quote(char *arg);
 char	**arr_copy(char **envp);
 int		ft_echo(t_all *all, int fd, char **arguments);

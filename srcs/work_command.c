@@ -1,7 +1,5 @@
 #include "../includes/minishell.h"
 
-
-
 int ft_exit(char **arguments)
 {
 	int i;
@@ -76,9 +74,10 @@ char **ft_make_arg_n(char **arguments, t_all *all, int num) // с нормой �
 
 int ft_work_old(char **arg_now, t_all *all)
 {
+	if (all->pipe->f_red_pip == 2)
+		return (0);
 	if (ft_strncmp(arg_now[0], "pwd", ft_strlen("pwd")) == 0)
 	{
-		// write(0, getcwd(0, 0), ft_strlen(getcwd(0, 0)));
 		printf("%s\n", getcwd(0, 0));
 		if (all->pipe->next != NULL)
 			exit(0);
@@ -101,15 +100,16 @@ int ft_work_old(char **arg_now, t_all *all)
 	return (127);
 }
 
-int ft_work_command(char **arguments, t_all *all) // asdfas asdas | asd asd >> asdasd << asf asd asd asd | ls
+int ft_work_command(char **arguments, t_all *all)
 {
+	
 	if (all->pipe->count_red_pip == -1)
 		return (ft_work_old(arguments, all));
 	else
 	{
 		t_lst_pipe *tmp;
 		tmp = all->pipe;
-		////////////////////					то, как правильно подавать пайпы в функцию // работу программы
+		/*					то, как правильно подавать пайпы в функцию // работу программы
 		// while (tmp->next)
 		// {
 		// 	ft_work_old(arguments, all, tmp->num);
@@ -117,33 +117,27 @@ int ft_work_command(char **arguments, t_all *all) // asdfas asdas | asd asd >> a
 		// 	tmp = tmp->next;
 		// }
 		// return (0);
-		////////////////////
+		*/
 		t_lst_pipe *prev;
 		while (tmp->next)
 		{
-
 			if (tmp->next != NULL)
 				pipe(tmp->fd_pid);
-			tmp->pid = fork();
-
 			prev = tmp->prev;
+
+			if (tmp->f_red_pip >= 0 && (tmp->fd_redirect != -1 || tmp->f_red_pip == 1 || tmp->prev->f_red_pip == 1))
+				tmp->pid = fork();
+
+			if (tmp->fd_redirect != -1)
+			{
+				close (tmp->fd_pid[1]);
+				tmp->fd_pid[1] = tmp->fd_redirect;
+				close(tmp->fd_pid[0]);
+			}
+			
 			if (!tmp->pid) // если отдаём
 			{
-				///////// редиректы
-				// if (tmp->f_red_pip == 2)
-				// {
-				// 	dup2(tmp->fd_pid[1], tmp->next->fd_redirect);
-				// 	close(tmp->fd_pid[1]);
-				// 	close(tmp->fd_pid[0]);
-				// }
-				// if (tmp->prev != NULL && tmp->prev->f_red_pip == 3 && tmp->prev->count_red_pip == 1)
-				// {
-				// 	dup2(tmp->fd_pid[1], tmp->next->fd_redirect);
-				// 	close(tmp->fd_pid[1]);
-				// 	close(tmp->fd_pid[0]);
-				// }
-				///////////
-				if (tmp->f_red_pip == 1)
+				if (tmp->f_red_pip == 1|| tmp->fd_redirect != -1 ) 
 				{
 					dup2(tmp->fd_pid[1], 1);
 					close(tmp->fd_pid[1]);
@@ -157,18 +151,17 @@ int ft_work_command(char **arguments, t_all *all) // asdfas asdas | asd asd >> a
 				}
 				ft_work_old(tmp->command, all);
 			}
-			if (tmp->f_red_pip == 1)
+			if (tmp->f_red_pip >= 0)
 				close(tmp->fd_pid[1]);
-			if (prev && prev->f_red_pip == 1)
+			if (prev && prev->f_red_pip >= 0)
 				close(prev->fd_pid[0]);
-			// if (tmp->f_red_pip == 2)
-			// 	close(tmp->next->fd_redirect);
 			tmp = tmp->next;
 		}
 		tmp = all->pipe;
 		while (tmp->next)
 		{
-			waitpid(tmp->pid, 0, 0);
+			if (tmp->f_red_pip >= 0 && (tmp->fd_redirect != -1 || tmp->f_red_pip == 1 || tmp->prev->f_red_pip == 1))
+				waitpid(tmp->pid, 0, 0);
 			tmp = tmp->next;
 		}
 	}

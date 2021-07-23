@@ -17,7 +17,8 @@ int main(int argc, char *argv[], char **env)
 	int fd1[2];
 
 	pipe(fd1);
-	dup2(fd1[1], redirect);
+	close (fd1[1]);
+	fd1[1] = redirect;
 	close(fd1[0]);
 	if (!fork())
 	{

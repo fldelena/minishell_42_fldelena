@@ -6,6 +6,7 @@ void	ft_lst_null(t_lst_pipe **tmp, int *num2)
 
 	(*tmp)->num = (*num2)++;
 	(*tmp)->start_arg = 0;
+	(*tmp)->fd_redirect = -1;
 	(*tmp)->count_red_pip = 0;
 	(*tmp)->prev = NULL;
 	(*tmp)->next = malloc(sizeof(t_lst_pipe));
@@ -13,6 +14,7 @@ void	ft_lst_null(t_lst_pipe **tmp, int *num2)
 	(*tmp)->command = NULL;
 	(*tmp) = (*tmp)->next;
 	(*tmp)->prev = begin2;
+	(*tmp)->fd_redirect = -1;
 	(*tmp)->next = NULL;
 	(*tmp)->command = NULL;
 }
@@ -23,6 +25,7 @@ void	ft_add_lst_2(t_lst_pipe *tmp, int c_pip, int count, int f_dir)
 
 	tmp->prev->f_red_pip = f_dir;
 	tmp->f_red_pip = 0;
+	tmp->fd_redirect = -1;
 	tmp->count_red_pip = c_pip;
 	tmp->start_arg = count;
 	tmp->next = malloc(sizeof(t_lst_pipe));
@@ -32,6 +35,7 @@ void	ft_add_lst_2(t_lst_pipe *tmp, int c_pip, int count, int f_dir)
 	tmp->next = NULL;
 	tmp->command = NULL;
 	tmp->num = -2;
+	tmp->fd_redirect = -1;
 	tmp->start_arg = -1;
 }
 
