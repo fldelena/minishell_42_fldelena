@@ -103,22 +103,29 @@ int ft_work_old(char **arg_now, t_all *all)
 
 int ft_work_command(char **arguments, t_all *all)
 {
-	
 	if (all->pipe->count_red_pip == -1)
 		return (ft_work_old(arguments, all));
 	else
 	{
 		t_lst_pipe *tmp;
-		tmp = all->pipe;
-
 		t_lst_pipe *prev;
+		t_lst_pipe *begin;
+		
+		tmp = all->pipe;
+		begin  = all->pipe;
+		while (begin->next)
+		{
+			begin->pid = 1;
+			begin->fd_pid[0] = 0;
+			begin->fd_pid[1] = 0;
+			begin = begin->next;
+		}
+		
 		while (tmp->next)
 		{
+			// printf("YA ZDESY %D\n",tmp->fd_redirect);
 			if (tmp->next != NULL)
-			{
 				pipe(tmp->fd_pid);
-				//printf("this pipe\n");
-			}
 			prev = tmp->prev;
 			if (tmp->f_red_pip == 2)
 			{
@@ -126,10 +133,11 @@ int ft_work_command(char **arguments, t_all *all)
 				tmp->fd_pid[1] = tmp->fd_redirect;
 				close(tmp->fd_pid[0]);
 			}
-			if (tmp->fd_redirect == -1) // было !=  не работало yes | head | wc
+			if (tmp->fd_redirect != -1 || tmp->f_red_pip >= 0) // было !=  не работало yes | head | wc
 				tmp->pid = fork();
-			if (!tmp->pid)
+			if (!tmp->pid )//&& tmp->f_red_pip == 2
 			{
+				
 				if (tmp->f_red_pip == 1 || tmp->f_red_pip == 2)  // если отдаём
 				{
 					dup2(tmp->fd_pid[1], 1);
@@ -144,16 +152,17 @@ int ft_work_command(char **arguments, t_all *all)
 				}
 				ft_work_old(tmp->command, all);
 			}
-			if (tmp->f_red_pip >= 0)
+			if (tmp->f_red_pip >= 0 && tmp->f_red_pip != 2)
 				close(tmp->fd_pid[1]);
-			if (prev && prev->f_red_pip >= 0)
+			if (prev && prev->f_red_pip >= 0 )
 				close(prev->fd_pid[0]);
 			tmp = tmp->next;
 		}
 		tmp = all->pipe;
 		while (tmp->next)
 		{
-			waitpid(tmp->pid, 0, 0);
+			if (tmp->fd_redirect != -1 || tmp->f_red_pip >= 0)	
+				waitpid(tmp->pid, 0, 0);
 			tmp = tmp->next;
 		}
 	}

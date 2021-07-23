@@ -7,6 +7,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <sys/wait.h>
+#include <stdlib.h> 
 int main(int argc, char *argv[], char **env)
 {
 	char *yes[2];
@@ -28,6 +29,18 @@ int main(int argc, char *argv[], char **env)
 		execve(yes[0], yes, env);
 	}
 	close(fd1[1]);
+
+
+	// char *s;
+	// pid_t pid;
+	// pid = fork();
+	// if (!pid)
+	// 	exit(43);
+	// int status;
+	// waitpid(pid,&status,0);
+	// status = WEXITSTATUS(status);
+	// printf("%d\n",status);	
+	
 }
 
 
