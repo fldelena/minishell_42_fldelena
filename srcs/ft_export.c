@@ -1,184 +1,15 @@
 #include "../includes/minishell.h"
 
-
-char	**del_by_index(char **src, int index)
-{
-	char	**arr;
-	int		i;
-	int		j;
-
-	i = 0;
-	j = 0;
-	while (src[i] != NULL)
-		i++;
-	arr = malloc(sizeof(char *) * i); // не прибавляю единичку так как мне нужно на один элемент массива меньше чем было
-	i = 0;
-	while (src[i] != NULL)
-	{
-		if (i == index)
-			i++;
-		arr[j] = src[i];
-		if (arr[j] == NULL)
-		{
-			free (src);
-			return (arr);
-		}
-		j++;
-		i++;
-	}
-	arr[j] = NULL;
-	free (src);
-	return (arr);
-}
-
-int		*del_int_by_index(int *src, int index)
-{
-	int *arr;
-	int i;
-	int j;
-
-	i = 0;
-	j = 0;
-	while (src[i] != '\0')
-		i++;
-	arr = malloc(sizeof(int) * i);
-	i = 0;
-	while (src[i] != '\0')
-	{
-		if (i == index)
-			i++;
-		arr[j] = src[i];
-		if (arr[j] == '\0')
-		{
-			free (src);
-			return (arr);
-		}
-		j++;
-		i++;
-	}
-	arr[j] = '\0';
-	free (src);
-	return (arr);
-}
-
-void	del_similar_var(t_env *env, int index)
-{
-	env->envp = del_by_index(env->envp, index);
-	env->var = del_by_index(env->var, index);
-	env->val = del_by_index(env->val, index);
-	env->f_equal = del_int_by_index(env->f_equal, index);
-}
-
-void	similar_var(t_env *env, char **arguments)
-{
-	int i;
-	int j;
-
-	i = 0;
-	while(env->var[i])
-	{
-		j = 1;
-		while(arguments[j])
-		{
-			if (ft_strncmp(env->var[i], arguments[j], ft_strlen(env->var[i])) == 0)
-			{
-				del_similar_var(env, i);
-				i--;
-			}
-			j++;
-		}
-		i++;
-	}
-}
-
-char **add_envp(char **envp, char **arguments, int words)
-{
-	char	**new_envp;
-	int		i;
-	int		j;
-
-	new_envp = malloc(sizeof(char *) * (words + 1));
-	i = 0;
-	while (*(envp + i))
-	{
-		new_envp[i] = envp[i];
-		i++;
-	}
-	j = 1;
-	while (*(arguments + j))
-	{
-		new_envp[i] = ft_strdup(arguments[j]);
-		i++;
-		j++;
-	}
-	new_envp[i] = NULL;
-	return (new_envp);
-}
-
-char **add_var_val(char **arr, char **arguments, int words, int index)
-{
-	char	**var_val;
-	char	**src;
-	int		i;
-	int		j;
-
-	var_val = malloc(sizeof(char *) * (words + 1));
-	i = 0;
-	while (*(arr + i))
-	{
-		var_val[i] = arr[i];
-		i++;
-	}
-	j = 1;
-	while (*(arguments + j))
-	{
-		if (ft_strchr(*(arguments + j), '='))
-		{
-			src = ft_split(*(arguments + j), '=');
-			var_val[i] = ft_strdup(src[index]);
-			free_arr(src);
-		}
-		else
-		{
-			if (index == 0)
-				var_val[i] = ft_strdup(arguments[j]);
-			else
-				var_val[i] = ft_strdup("");
-		}
-		i++;
-		j++;
-	}
-	var_val[i] = NULL;
-	return (var_val);
-}
-
-int		*add_f_equal(char **envp, int words)
-{
-	int *arr;
-	int i;
-
-	i = 0;
-	arr = malloc(sizeof(int) * words + 1);
-	while (envp[i] != '\0')
-	{
-		if (ft_strchr(envp[i], '='))
-			arr[i] = 2;
-		else
-			arr[i] = 1;
-		i++;
-	}
-	arr[i] = '\0';
-	return(arr);
-}
-
 void	add_variable(t_env *env, char **arguments)
 {
-	int		word_count = 0;
-	int		args_count = 0;
-	int		i = 1;
+	int		word_count;
+	int		args_count;
+	int		i;
 
+	word_count = 0;
+	args_count = 0;
+	i = 1;
 	similar_var(env, arguments);
-
 	while (*(env->envp + word_count))
 		word_count++;
 	while (*(arguments + i))
@@ -195,18 +26,20 @@ void	add_variable(t_env *env, char **arguments)
 void	line_sort(char **envp)
 {
 	char	*str;
-	int		count = 0;
-	int		i = 1;
+	int		count;
+	int		i;
 	int		j;
 
+	count = 0;
 	while (*(envp + count))
 		count++;
+	i = 1;
 	while (i < count)
 	{
 		j = 0;
 		while (j < count - i)
 		{
-			if(strcmp(*(envp + j), *(envp + j + 1)) > 0)
+			if (strcmp(*(envp + j), *(envp + j + 1)) > 0)
 			{
 				str = envp[j];
 				envp[j] = envp[j + 1];
@@ -218,15 +51,14 @@ void	line_sort(char **envp)
 	}
 }
 
-
-int ft_export(t_all *all, char **arguments)
+int	ft_export(t_all *all, char **arguments)
 {
-	char **sort_envp;
-	char **sort_var;
-	char **sort_val;
-	int *f_equal;
-	char **var_val;
-	int i;
+	char	**sort_envp;
+	char	**sort_var;
+	char	**sort_val;
+	int		*f_equal;
+	char	**var_val;
+	int		i;
 
 	i = 0;
 	if (*(arguments + 1) != NULL)
@@ -243,7 +75,7 @@ int ft_export(t_all *all, char **arguments)
 		sort_val = malloc(sizeof(char *) * (i + 1));
 		f_equal = malloc(sizeof(int) * (i + 1));
 		i = 0;
-		while (sort_envp[i] != NULL) // сортировочка по алфавиту (заключить в кавычки все то что идет после знака равно!!!!)
+		while (sort_envp[i] != NULL)
 		{
 			if (ft_strchr(sort_envp[i], '='))
 			{

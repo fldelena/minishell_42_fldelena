@@ -10,7 +10,10 @@ SRC			=	minishell.c \
 				ft_echo.c \
 				ft_env.c \
 				ft_cd.c \
+				ft_exp_add_var.c \
+				ft_exp_del_var.c \
 				ft_export.c \
+				ft_unset.c \
 				mallocs.c \
 				pipe.c \
 				binary_work.c \
@@ -44,7 +47,7 @@ $(LIBFT): libft/
 			@mv libft/$(LIBFT) .
 
 clean:
-			$(RM) $(OBJS) 
+			$(RM) $(OBJS)
 			$(MAKE) -C libft/ fclean
 			$(RM) $(LIBFT)
 

@@ -59,20 +59,22 @@ typedef struct s_all
 	t_parser parser;
 } t_all;
 
-int		ft_echo(t_all *all, int fd, char **arguments);
 int		ft_check_command(char **m_str, t_all *all);
-char	*cut_quote(char *arg);
-int		is_n_flag(char *s);
-void	add_variable(t_env *env, char **arguments);
 int		ft_work_command(char **arguments, t_all *all);
 void	free_main(char **m_str, char **arguments, t_all *all);
+void	add_variable(t_env *env, char **arguments);             //
+char	*cut_quote(char *arg);
+char	**arr_copy(char **envp);
+int		ft_echo(t_all *all, int fd, char **arguments);
 int		ft_cd(char **arguments, t_all *all);
 int		ft_env(t_all *all);
-int 	ft_export(t_all *all, char **arguments);
-void	line_sort(char **envp);
-void	add_variable(t_env *env, char **arguments);
-void	del_variable(t_env *env, char **arguments);
-char	**arr_copy(char **envp);
+int		ft_export(t_all *all, char **arguments);
+int		ft_unset(t_all *all, char **arguments);
+void	similar_var(t_env *env, char **arguments);
+char	**add_envp(char **envp, char **arguments, int words);
+char	**add_var_val(char **arr, char **arguments, int words, int index);
+int		*add_f_equal(char **envp, int words);
+void	del_similar_var(t_env *env, int index);
 void	free_arr(char **arr);
 void	make_envp(t_all *all, char **envp);
 t_all	*main_struct_malloc(char **envp);

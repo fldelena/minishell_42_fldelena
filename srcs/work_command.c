@@ -1,13 +1,6 @@
 #include "../includes/minishell.h"
 
-int ft_unset(t_all *all, char **arguments)
-{
-	if (*(arguments + 1) != NULL)
-		del_variable(all->env, arguments);
-	if (all->pipe->next != NULL)
-		exit(0);
-	return (0);
-}
+
 
 int ft_exit(char **arguments)
 {
