@@ -43,7 +43,7 @@ char **ft_make_arg_n(char **arguments, t_all *all, int num) // с нормой �
 		}
 		else // когда самый последнйи пайп
 		{
-			i = 0;
+			i = 0; 
 			while (arguments[count]) // ls ls | cat cat | me me | pwd pwd pwd pwd
 			{
 				count++;
@@ -65,6 +65,7 @@ char **ft_make_arg_n(char **arguments, t_all *all, int num) // с нормой �
 	i = 0;
 	while (i != count)
 	{
+		// printf("%s\n",arguments[0]); 
 		arg_now[i] = arguments[i + count_tmp_arg];
 		i++;
 	}
@@ -74,8 +75,8 @@ char **ft_make_arg_n(char **arguments, t_all *all, int num) // с нормой �
 
 int ft_work_old(char **arg_now, t_all *all)
 {
-	if (all->pipe->f_red_pip == 2)
-		return (0);
+	// if (all->pipe->f_red_pip == 2)
+	// 	return (0);
 	if (ft_strncmp(arg_now[0], "pwd", ft_strlen("pwd")) == 0)
 	{
 		printf("%s\n", getcwd(0, 0));
@@ -109,35 +110,27 @@ int ft_work_command(char **arguments, t_all *all)
 	{
 		t_lst_pipe *tmp;
 		tmp = all->pipe;
-		/*					то, как правильно подавать пайпы в функцию // работу программы
-		// while (tmp->next)
-		// {
-		// 	ft_work_old(arguments, all, tmp->num);
-		// 	printf("\n");
-		// 	tmp = tmp->next;
-		// }
-		// return (0);
-		*/
+
 		t_lst_pipe *prev;
 		while (tmp->next)
 		{
 			if (tmp->next != NULL)
+			{
 				pipe(tmp->fd_pid);
+				//printf("this pipe\n");
+			}
 			prev = tmp->prev;
-
-			if (tmp->f_red_pip >= 0 && (tmp->fd_redirect != -1 || tmp->f_red_pip == 1 || tmp->prev->f_red_pip == 1))
-				tmp->pid = fork();
-
-			if (tmp->fd_redirect != -1)
+			if (tmp->f_red_pip == 2)
 			{
 				close (tmp->fd_pid[1]);
 				tmp->fd_pid[1] = tmp->fd_redirect;
 				close(tmp->fd_pid[0]);
 			}
-			
-			if (!tmp->pid) // если отдаём
+			if (tmp->fd_redirect == -1) // было !=  не работало yes | head | wc
+				tmp->pid = fork();
+			if (!tmp->pid)
 			{
-				if (tmp->f_red_pip == 1|| tmp->fd_redirect != -1 ) 
+				if (tmp->f_red_pip == 1 || tmp->f_red_pip == 2)  // если отдаём
 				{
 					dup2(tmp->fd_pid[1], 1);
 					close(tmp->fd_pid[1]);
@@ -160,8 +153,7 @@ int ft_work_command(char **arguments, t_all *all)
 		tmp = all->pipe;
 		while (tmp->next)
 		{
-			if (tmp->f_red_pip >= 0 && (tmp->fd_redirect != -1 || tmp->f_red_pip == 1 || tmp->prev->f_red_pip == 1))
-				waitpid(tmp->pid, 0, 0);
+			waitpid(tmp->pid, 0, 0);
 			tmp = tmp->next;
 		}
 	}
