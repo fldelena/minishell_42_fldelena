@@ -62,9 +62,7 @@ int	ft_export(t_all *all, char **arguments)
 
 	i = 0;
 	if (*(arguments + 1) != NULL)
-	{
 		add_variable(all->env, arguments);
-	}
 	else
 	{
 		sort_envp = arr_copy(all->env->envp);
