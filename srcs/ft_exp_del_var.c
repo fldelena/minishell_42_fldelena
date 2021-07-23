@@ -1,6 +1,5 @@
 #include "../includes/minishell.h"
 
-
 char	**del_by_index(char **src, int index)
 {
 	char	**arr;
@@ -12,8 +11,8 @@ char	**del_by_index(char **src, int index)
 	while (src[i] != NULL)
 		i++;
 	arr = malloc(sizeof(char *) * i);
-	i = 0;
-	while (src[i] != NULL)
+	i = -1;
+	while (src[++i] != NULL)
 	{
 		if (i == index)
 			i++;
@@ -24,7 +23,6 @@ char	**del_by_index(char **src, int index)
 			return (arr);
 		}
 		j++;
-		i++;
 	}
 	arr[j] = NULL;
 	free (src);
@@ -42,8 +40,8 @@ int	*del_int_by_index(int *src, int index)
 	while (src[i] != '\0')
 		i++;
 	arr = malloc(sizeof(int) * i);
-	i = 0;
-	while (src[i] != '\0')
+	i = -1;
+	while (src[++i] != '\0')
 	{
 		if (i == index)
 			i++;
@@ -54,7 +52,6 @@ int	*del_int_by_index(int *src, int index)
 			return (arr);
 		}
 		j++;
-		i++;
 	}
 	arr[j] = '\0';
 	free (src);

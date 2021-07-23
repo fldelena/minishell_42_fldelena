@@ -47,10 +47,30 @@ char	**add_envp(char **envp, char **arguments, int words)
 	return (new_envp);
 }
 
+char	*val_var_create(char *src, int index)
+{
+	char	**arr;
+	char	*ret;
+
+	if (ft_strchr(src, '='))
+	{
+		arr = ft_split(src, '=');
+		ret = ft_strdup(arr[index]);
+		free_arr(arr);
+	}
+	else
+	{
+		if (index == 0)
+			ret = ft_strdup(src);
+		else
+			ret = ft_strdup("");
+	}
+	return (ret);
+}
+
 char	**add_var_val(char **arr, char **arguments, int words, int index)
 {
 	char	**var_val;
-	char	**src;
 	int		i;
 	int		j;
 
@@ -64,19 +84,7 @@ char	**add_var_val(char **arr, char **arguments, int words, int index)
 	j = 1;
 	while (*(arguments + j))
 	{
-		if (ft_strchr(*(arguments + j), '='))
-		{
-			src = ft_split(*(arguments + j), '=');
-			var_val[i] = ft_strdup(src[index]);
-			free_arr(src);
-		}
-		else
-		{
-			if (index == 0)
-				var_val[i] = ft_strdup(arguments[j]);
-			else
-				var_val[i] = ft_strdup("");
-		}
+		var_val[i] = val_var_create(arguments[j], index);
 		i++;
 		j++;
 	}
