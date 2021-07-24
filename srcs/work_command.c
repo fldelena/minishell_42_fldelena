@@ -1,20 +1,5 @@
 #include "../includes/minishell.h"
 
-int ft_exit(char **arguments)
-{
-	int i;
-
-	i = 0;
-	while (arguments[i])
-		i++;
-	if (i > 2)
-		return (-1);
-	else if (i == 2)
-		exit(ft_atoi(arguments[1]));
-	else
-		exit(errno);
-}
-
 char **ft_make_arg_n(char **arguments, t_all *all, int num) // с нормой этого дерьма пусть возится gvenonat
 {
 	int count; // количество сргументов команды
@@ -43,7 +28,7 @@ char **ft_make_arg_n(char **arguments, t_all *all, int num) // с нормой �
 		}
 		else // когда самый последнйи пайп
 		{
-			i = 0; 
+			i = 0;
 			while (arguments[count]) // ls ls | cat cat | me me | pwd pwd pwd pwd
 			{
 				count++;
@@ -109,7 +94,7 @@ int ft_work_command(char **arguments, t_all *all)
 		t_lst_pipe *tmp;
 		t_lst_pipe *prev;
 		t_lst_pipe *begin;
-		
+
 		tmp = all->pipe;
 		begin  = all->pipe;
 		while (begin->next)
@@ -119,7 +104,7 @@ int ft_work_command(char **arguments, t_all *all)
 			begin->fd_pid[1] = 0;
 			begin = begin->next;
 		}
-		
+
 		while (tmp->next)
 		{
 			//printf("YA ZDESY %D\n",tmp->fd_redirect);
@@ -164,7 +149,7 @@ int ft_work_command(char **arguments, t_all *all)
 		tmp = all->pipe;
 		while (tmp->next)
 		{
-			if (tmp->fd_redirect != -1 || tmp->f_red_pip >= 0)	
+			if (tmp->fd_redirect != -1 || tmp->f_red_pip >= 0)
 				waitpid(tmp->pid, 0, 0);
 			tmp = tmp->next;
 		}

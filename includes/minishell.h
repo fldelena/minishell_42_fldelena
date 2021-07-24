@@ -83,6 +83,7 @@ int		ft_check_error(int c_pip, int f_dir);
 int		ft_check_pip_red(char **m_str, t_all *all, int *i);
 int		ft_open_redirect(t_all *all);
 int		exception(char **arguments);
+int		ft_exit(char **arguments);
 char	*cut_quote(char *arg);
 char	*ft_help1(char *m_str, int *i, int count);
 char	*ft_help2(char *m_str, int *i, int count);

@@ -2,18 +2,12 @@ NAME		=	minishell
 
 SRCFD		=	srcs
 PARSER_PATH	=	folder_check_comm
+BUILD_PATH	= 	folder_buildin
 
 SRC			=	minishell.c \
 				make_arguments.c \
 				work_command.c \
 				work_command_utils.c \
-				ft_echo.c \
-				ft_env.c \
-				ft_cd.c \
-				ft_exp_add_var.c \
-				ft_exp_del_var.c \
-				ft_export.c \
-				ft_unset.c \
 				mallocs.c \
 				binary_work.c \
 				free.c \
@@ -24,7 +18,16 @@ PARSER_FILE	=	check_command.c \
 				dollar_utils.c \
 				make_list.c
 
-SRCS 	= $(addprefix $(SRCFD)/, $(SRC)) $(addprefix $(PARSER_PATH)/, $(PARSER_FILE))
+BUILD_FILE	=	ft_echo.c \
+				ft_env.c \
+				ft_cd.c \
+				ft_exp_add_var.c \
+				ft_exp_del_var.c \
+				ft_export.c \
+				ft_unset.c \
+				ft_exit.c
+
+SRCS 	= $(addprefix $(SRCFD)/, $(SRC)) $(addprefix $(PARSER_PATH)/, $(PARSER_FILE)) $(addprefix $(BUILD_PATH)/, $(BUILD_FILE))
 
 OBJS		=	$(SRCS:.c=.o)
 LIBFT		=	libft.a
