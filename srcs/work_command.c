@@ -102,7 +102,7 @@ int	ft_work_old(char **arg_now, t_all *all)
 		return (ft_export(all, arg_now));
 	else if (ft_strncmp(arg_now[0], "unset", ft_strlen("unset")) == 0)
 		return (ft_unset(all, arg_now));
-	else if (ft_strncmp(arg_now[0], "exit", ft_strlen("exit")) == 0) // gvenonat
+	else if (ft_strncmp(arg_now[0], "exit", ft_strlen("exit")) == 0) // gvenonat надо исправить отслуживание сигналов
 		ft_exit(arg_now);
 	else
 		return (binary_work(all, arg_now));
@@ -111,16 +111,16 @@ int	ft_work_old(char **arg_now, t_all *all)
 
 int	ft_work_command(char **arguments, t_all *all)
 {
+	t_lst_pipe	*tmp;
+	t_lst_pipe	*prev;
+	t_lst_pipe	*begin;
+
 	if (all->pipe->count_red_pip == -1)
 		return (ft_work_old(arguments, all));
 	else
 	{
-		t_lst_pipe *tmp;
-		t_lst_pipe *prev;
-		t_lst_pipe *begin;
-
 		tmp = all->pipe;
-		begin  = all->pipe;
+		begin = all->pipe;
 		while (begin->next)
 		{
 			begin->pid = 1;
@@ -128,30 +128,23 @@ int	ft_work_command(char **arguments, t_all *all)
 			begin->fd_pid[1] = 0;
 			begin = begin->next;
 		}
-
 		while (tmp->next)
 		{
-			//printf("YA ZDESY %D\n",tmp->fd_redirect);
 			if (tmp->next != NULL )
 				pipe(tmp->fd_pid);
 			prev = tmp->prev;
 			if (tmp->f_red_pip == 2)
 			{
-				// printf("YA ZDESY(1) num_list = %i ,fd = %D\n",tmp->num,tmp->fd_redirect);
 				close (tmp->fd_pid[1]);
 				tmp->fd_pid[1] = tmp->fd_redirect;
 				close(tmp->fd_pid[0]);
 			}
-			if (tmp->fd_redirect != -1 || tmp->f_red_pip >= 0) // было !=  не работало yes | head | wc
-			{
-				// printf("YA ZDESY(2) num_list = %i ,fd = %D\n",tmp->num,tmp->fd_redirect);
+			if (tmp->fd_redirect != -1 || tmp->f_red_pip >= 0)
 				tmp->pid = fork();
-			}
-			if (!tmp->pid )//&& tmp->f_red_pip == 2
+			if (!tmp->pid)
 			{
-				if (tmp->f_red_pip == 1 || tmp->f_red_pip == 2)  // если отдаём
+				if (tmp->f_red_pip == 1 || tmp->f_red_pip == 2)
 				{
-					// printf("YA ZDESY(3) num_list = %i ,fd = %D\n",tmp->num,tmp->fd_redirect);
 					dup2(tmp->fd_pid[1], 1);
 					close(tmp->fd_pid[1]);
 					close(tmp->fd_pid[0]);
@@ -164,7 +157,7 @@ int	ft_work_command(char **arguments, t_all *all)
 				}
 				ft_work_old(tmp->command, all);
 			}
-			if (tmp->f_red_pip >= 0) // && tmp->f_red_pip != 2
+			if (tmp->f_red_pip >= 0)
 				close(tmp->fd_pid[1]);
 			if (prev && prev->f_red_pip >= 0)
 				close(prev->fd_pid[0]);
