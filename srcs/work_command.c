@@ -1,49 +1,73 @@
 #include "../includes/minishell.h"
 
-char **ft_make_arg_n(char **arguments, t_all *all, int num) // с нормой этого дерьма пусть возится gvenonat
+t_lst_pipe	*ft_find_num(t_all *all, int *count, int num)
 {
-	int count; // количество сргументов команды
-	int count_tmp_arg;
-	int i;
-	char **arg_now;
-	t_lst_pipe *tmp;
-	t_lst_pipe *tmp_help;
+	t_lst_pipe	*tmp;
+
+	tmp = all->pipe;
+	while (tmp->next)
+	{
+		if (tmp->num == num)
+			break ;
+		tmp = tmp->next;
+	}
+	*count = tmp->start_arg;
+	return (tmp);
+}
+
+int	ft_count_last_lst(char **arguments, int count)
+{
+	int	i;
+
+	i = 0;
+	while (arguments[count])
+	{
+		count++;
+		i++;
+	}
+	count = i;
+	return (count);
+}
+
+int	ft_make_help(t_all *all, char **arguments, int *count, int num)
+{
+	t_lst_pipe	*tmp_help;
+	t_lst_pipe	*tmp;
+	int			count_tmp_arg;
+
+	count_tmp_arg = 0;
+	tmp = all->pipe;
+	tmp = ft_find_num(all, count, num);
+	tmp_help = tmp->next;
+	if (tmp->next && tmp_help->next)
+	{
+		tmp = tmp->next;
+		(*count) = tmp->start_arg - (*count);
+	}
+	else
+		(*count) = ft_count_last_lst(arguments, (*count));
+	if (tmp->prev && tmp->next && tmp_help->next)
+	{
+		tmp = tmp->prev;
+		count_tmp_arg = tmp->start_arg;
+	}
+	else
+		count_tmp_arg = tmp->start_arg;
+	return (count_tmp_arg);
+}
+
+char	**ft_make_arg_n(char **arguments, t_all *all, int num)
+{
+	int			count;
+	int			count_tmp_arg;
+	int			i;
+	char		**arg_now;
+	t_lst_pipe	*tmp;
 
 	count_tmp_arg = 0;
 	tmp = all->pipe;
 	if (num != 0)
-	{
-		while (tmp->next)
-		{
-			if (tmp->num == num)
-				break;
-			tmp = tmp->next;
-		}
-		count = tmp->start_arg;
-		tmp_help = tmp->next;
-		if (tmp->next && tmp_help->next) // сюда захожу когда средние пайпы
-		{
-			tmp = tmp->next;
-			count = tmp->start_arg - count;
-		}
-		else // когда самый последнйи пайп
-		{
-			i = 0;
-			while (arguments[count]) // ls ls | cat cat | me me | pwd pwd pwd pwd
-			{
-				count++;
-				i++;
-			}
-			count = i;
-		}
-		if (tmp->prev && tmp->next && tmp_help->next)
-		{
-			tmp = tmp->prev;
-			count_tmp_arg = tmp->start_arg;
-		}
-		else
-			count_tmp_arg = tmp->start_arg;
-	}
+		count_tmp_arg = ft_make_help(all, arguments, &count, num);
 	else
 		count = tmp->next->start_arg;
 	arg_now = malloc(sizeof(char *) * (count + 1));
@@ -57,10 +81,8 @@ char **ft_make_arg_n(char **arguments, t_all *all, int num) // с нормой �
 	return (arg_now);
 }
 
-int ft_work_old(char **arg_now, t_all *all)
+int	ft_work_old(char **arg_now, t_all *all)
 {
-	// if (all->pipe->f_red_pip == 2)
-	// 	return (0);
 	if (ft_strncmp(arg_now[0], "pwd", ft_strlen("pwd")) == 0)
 	{
 		printf("%s\n", getcwd(0, 0));
@@ -85,7 +107,7 @@ int ft_work_old(char **arg_now, t_all *all)
 	return (127);
 }
 
-int ft_work_command(char **arguments, t_all *all)
+int	ft_work_command(char **arguments, t_all *all)
 {
 	if (all->pipe->count_red_pip == -1)
 		return (ft_work_old(arguments, all));
