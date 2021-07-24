@@ -1,17 +1,14 @@
-// #include "../includes/minishell.h"
+#include "../includes/minishell.h"
 
-// void	signal_work(int sig)
-// {
-// 	if (sig == SIGINT && pid_on != 0)
-// 		//чтото с чем-то
-// 	else if (sig == SIGINT)
-// 	{
-// 		//чтото еще
-// 	}
-// }
+void	signal_work(int sig)
+{
+	if (g_pid)
+	{
+		if (sig == SIGQUIT)
+			printf("quit\n");
+		kill(g_pid,sig);
+		g_pid = 0;
+	} else if ( sig == SIGINT)
+		write(1,"\nminishell:",11);
 
-// void	ft_signal(void)
-// {
-// 	signal(SIGINT, &signal_work);
-// 	pid_on = 0;
-// }
+}

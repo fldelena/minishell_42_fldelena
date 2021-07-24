@@ -72,6 +72,8 @@ int main(int argc, char **argv, char **envp)
 
 	m_str = 0;
 	arguments = NULL;
+	signal(SIGINT, &signal_work);
+	signal(SIGQUIT, &signal_work);
 	if (argc != 1) // не должен принимать никаких аргументов
 	{
 		print_error(NULL, -1);

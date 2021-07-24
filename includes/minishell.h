@@ -17,8 +17,8 @@
 # define TRUE 1
 
 
-// pid_t	pid_on;
-// int		sig_on;
+pid_t	g_pid;
+int		g_sig;
 // структура для окружения
 
 typedef struct s_env
@@ -104,5 +104,5 @@ void	ft_end_rewrite(char *m2, char *m_str, int j_m, int j_str);
 void	ft_add_lst_2(t_lst_pipe *tmp, int c_pip, int count, int f_dir);
 void	ft_lst_null(t_lst_pipe **tmp, int *num2);
 void	ft_first(char *m_str, int *t_l_quote, int *o_l_quote, int *i);
-
+void	signal_work(int sig);
 #endif

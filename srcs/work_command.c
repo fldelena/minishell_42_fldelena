@@ -140,7 +140,10 @@ int	ft_work_command(char **arguments, t_all *all)
 				close(tmp->fd_pid[0]);
 			}
 			if (tmp->fd_redirect != -1 || tmp->f_red_pip >= 0)
+			{
 				tmp->pid = fork();
+				g_pid = tmp->pid;
+			}
 			if (!tmp->pid)
 			{
 				if (tmp->f_red_pip == 1 || tmp->f_red_pip == 2)

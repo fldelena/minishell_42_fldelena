@@ -60,6 +60,7 @@ int binary_work(t_all *all, char **arguments)
 	if (all->pipe->next == NULL)
 	{
 		pidor = fork();
+		g_pid = pidor;
 		if (!pidor)
 		{
 			if (pathways[i] != NULL)
