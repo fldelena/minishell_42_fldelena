@@ -16,6 +16,9 @@
 
 # define TRUE 1
 
+
+// pid_t	pid_on;
+// int		sig_on;
 // структура для окружения
 
 typedef struct s_env
