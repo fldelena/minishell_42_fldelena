@@ -6,13 +6,14 @@ void	ft_correct_rir(t_all *all)
 	t_lst_pipe	*tmp_save;
 	int			save_reddirect;
 
-    /* tmp = all->pipe;
-    // while(tmp->next)
-    // {
-    //     printf("%s -- %i  and flag_red_pip = %i\n", tmp->command[0], tmp->fd_redirect, tmp->f_red_pip);
-    //     tmp = tmp->next;
-    // }
-    // printf("\n");
+    /*
+	tmp = all->pipe;
+    while(tmp->next)
+    {
+        printf("%s -- %i  and flag_red_pip = %i\n", tmp->command[0], tmp->fd_redirect, tmp->f_red_pip);
+        tmp = tmp->next;
+    }
+    printf("\n");
     */
 
 	tmp = all->pipe;
@@ -36,13 +37,13 @@ void	ft_correct_rir(t_all *all)
 		tmp = tmp->next;
 	}
     /*
-    // tmp = all->pipe;
-    // while(tmp->next)
-    // {
-    //     printf("%s -- %i  and flag_red_pip = %i\n", tmp->command[0], tmp->fd_redirect, tmp->f_red_pip);
-    //     tmp = tmp->next;
-    // }
-    // exit(0);
+    tmp = all->pipe;
+    while(tmp->next)
+    {
+        printf("%s -- %i  and flag_red_pip = %i\n", tmp->command[0], tmp->fd_redirect, tmp->f_red_pip);
+        tmp = tmp->next;
+    }
+    exit(0);
     */
 }
 
@@ -69,7 +70,7 @@ int	ft_open_redirect(t_all *all)
 				tmp->f_red_pip = -10;
 			}
 		}
-		if (tmp->prev != NULL && (tmp->prev->f_red_pip == 3 || tmp->prev->f_red_pip == -10) \
+		if (tmp->prev != NULL && (tmp->prev->f_red_pip == 3) \
 			&& tmp->prev->count_red_pip == 1) // << and <
 		{
 			tmp->prev->fd_redirect = open(tmp->command[0], O_RDONLY, 0644);

@@ -12,7 +12,7 @@ char	*cut(char *arg, int *i)
 	quot = arg[*i];
 	while (arg[++k] != quot && arg[k - 1] != '\\' && arg[k] != '\0')
 		j++;
-	str = (char *)malloc(sizeof(char) * j);
+	str = (char *)malloc(sizeof(char) * (j + 1));
 	j = 0;
 	while (arg[++(*i)] != quot && arg[(*i) - 1] != '\\' && arg[k] != '\0')
 	{
@@ -32,7 +32,7 @@ char	*cut_quote(char *arg)
 	i = 0;
 	j = 0;
 	path = (char *)malloc(sizeof(char) * (ft_strlen(arg) + 1));
-	while (arg[i])
+	while (arg && arg[i])
 	{
 		if ((arg[i] == '"' || arg[i] == '\'')
 			&& ((i > 0 && arg[i - 1] != '\\' ) || i == 0))

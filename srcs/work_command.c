@@ -83,6 +83,8 @@ char	**ft_make_arg_n(char **arguments, t_all *all, int num)
 
 int	ft_work_old(char **arg_now, t_all *all)
 {
+	if (!arg_now[0])
+		return (0);
 	if (ft_strncmp(arg_now[0], "pwd", ft_strlen("pwd")) == 0)
 	{
 		printf("%s\n", getcwd(0, 0));
@@ -130,7 +132,7 @@ int	ft_work_command(char **arguments, t_all *all)
 		while (tmp->next)
 		{
 			//printf("YA ZDESY %D\n",tmp->fd_redirect);
-			if (tmp->next != NULL)
+			if (tmp->next != NULL )
 				pipe(tmp->fd_pid);
 			prev = tmp->prev;
 			if (tmp->f_red_pip == 2)

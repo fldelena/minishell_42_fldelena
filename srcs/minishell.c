@@ -5,7 +5,7 @@
 // {
 // 	(void)sig;
 // 	if (g_pid )
-// 		return ;	
+// 		return ;
 // }
 
 void print_error(char *command, int my_error)
@@ -123,14 +123,14 @@ int main(int argc, char **argv, char **envp)
 		{
 			printf("minishell: %s\n", strerror(errno));
 			continue ;
-		}	
+		}
 		////////////////////
 		// t_lst_pipe *tmp;
 		// tmp = all->pipe;
 		// while (tmp->next)
 		// {
 		// 	k = 0;
-		// 	printf("num%i : arg = %i, count pipe (редиректов подряд)= %i , тип f_red_pip = %i\n", tmp->num, tmp->start_arg, tmp->count_red_pip, tmp->f_red_pip);
+		// 	printf("num%i : arg = %i, count pipe (редиректов подряд)= %i , тип f_red_pip = %i, fd_redirect = %i\n", tmp->num, tmp->start_arg, tmp->count_red_pip, tmp->f_red_pip, tmp->fd_redirect);
 		// 	printf("command : ");
 		// 	while (tmp->command[k])
 		// 	{
