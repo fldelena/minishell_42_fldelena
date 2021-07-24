@@ -128,21 +128,21 @@ int ft_work_command(char **arguments, t_all *all)
 			prev = tmp->prev;
 			if (tmp->f_red_pip == 2)
 			{
-				printf("YA ZDESY(1) num_list = %i ,fd = %D\n",tmp->num,tmp->fd_redirect);
+				// printf("YA ZDESY(1) num_list = %i ,fd = %D\n",tmp->num,tmp->fd_redirect);
 				close (tmp->fd_pid[1]);
 				tmp->fd_pid[1] = tmp->fd_redirect;
 				close(tmp->fd_pid[0]);
 			}
 			if (tmp->fd_redirect != -1 || tmp->f_red_pip >= 0) // было !=  не работало yes | head | wc
 			{
-				printf("YA ZDESY(2) num_list = %i ,fd = %D\n",tmp->num,tmp->fd_redirect);
+				// printf("YA ZDESY(2) num_list = %i ,fd = %D\n",tmp->num,tmp->fd_redirect);
 				tmp->pid = fork();
 			}
 			if (!tmp->pid )//&& tmp->f_red_pip == 2
 			{
 				if (tmp->f_red_pip == 1 || tmp->f_red_pip == 2)  // если отдаём
 				{
-					printf("YA ZDESY(3) num_list = %i ,fd = %D\n",tmp->num,tmp->fd_redirect);
+					// printf("YA ZDESY(3) num_list = %i ,fd = %D\n",tmp->num,tmp->fd_redirect);
 					dup2(tmp->fd_pid[1], 1);
 					close(tmp->fd_pid[1]);
 					close(tmp->fd_pid[0]);

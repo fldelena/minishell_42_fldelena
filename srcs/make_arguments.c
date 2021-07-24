@@ -23,7 +23,7 @@ char	*cut(char *arg, int *i)
 	return (str);
 }
 
-char	*cut_quote(char *arg)		// короче я хз как кейсы сверху исправить :)
+char	*cut_quote(char *arg)
 {
 	char	*path;
 	int		i;
@@ -35,19 +35,15 @@ char	*cut_quote(char *arg)		// короче я хз как кейсы сверх
 	while (arg[i])
 	{
 		if ((arg[i] == '"' || arg[i] == '\'')
-			&& ((i > 0 && arg[i - 1] != '\\' ) || i == 0)) // || ((arg[i] == '"' || arg[i] == '\'') && i == 0) ) // если перед " слеш - убрать слеш
+			&& ((i > 0 && arg[i - 1] != '\\' ) || i == 0))
 		{
-			path = ft_strjoin(path, cut(arg, &i)); // эта фанкшн возвращает строку без ковычек, и сдвигает индекс "i" на расстояние длины строки
+			path = ft_strjoin(path, cut(arg, &i));
 			j = ft_strlen(path);
 			i++;
-			// j--;
 		}
 		else if ((arg[i] == '"' || arg[i] == '\'')
 			&& ((i > 0 && arg[i - 1] == '\\' ) || i == 0))
 			j--;
-		//else
-		//	path[j++] = arg[i++];
-		//printf("i find sega\n");
 		if ((arg[i] != '"' && arg[i] != '\''))
 			path[j++] = arg[i++];
 	}

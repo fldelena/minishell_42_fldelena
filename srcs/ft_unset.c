@@ -37,17 +37,14 @@ int	*del_f_equal(t_env *env, char **arguments, int words)
 	int		k;
 
 	arr = malloc(sizeof(int) * (words + 1));
-	i = 0;
+	i = -1;
 	k = 0;
-	while (env->envp[i] != NULL)
+	while (env->envp[++i] != NULL)
 	{
-		j = 1;
-		while (arguments[j] != NULL)
-		{
+		j = 0;
+		while (arguments[++j] != NULL)
 			if (strcmp(env->var[i], arguments[j]) == 0)
 				i++;
-			j++;
-		}
 		if (ft_strchr(env->envp[i], '='))
 			arr[k] = 2;
 		else
@@ -57,7 +54,6 @@ int	*del_f_equal(t_env *env, char **arguments, int words)
 			arr[k] = '\0';
 			return (arr);
 		}
-		i++;
 		k++;
 	}
 	arr[k] = '\0';
