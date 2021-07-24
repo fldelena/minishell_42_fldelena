@@ -1,9 +1,9 @@
 #include "../includes/minishell.h"
 
-char	**arr_copy(char **envp)				// функция копирующая массив строк
+char	**arr_copy(char **envp)
 {
 	char	**my_envp;
-	int i;
+	int		i;
 
 	i = 0;
 	while (*(envp + i))
@@ -16,12 +16,8 @@ char	**arr_copy(char **envp)				// функция копирующая масс�
 		i++;
 	}
 	my_envp[i] = NULL;
-	return(my_envp);
+	return (my_envp);
 }
-
-
-
-
 
 void	make_envp(t_all *all, char **envp)
 {
@@ -32,7 +28,7 @@ void	make_envp(t_all *all, char **envp)
 	while (envp[i])
 	{
 		all->env->envp[i] = ft_strdup(*(envp + i));
-		if(ft_strchr(all->env->envp[i], '='))
+		if (ft_strchr(all->env->envp[i], '='))
 		{
 			all->env->f_equal[i] = 2;
 			arr = ft_split(*(envp + i), '=');
