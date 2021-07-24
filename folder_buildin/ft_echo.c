@@ -1,8 +1,10 @@
 #include "../includes/minishell.h"
 
-int		is_n_flag(char *s)					// функция для корректной работы -n в echo
+int	is_n_flag(char *s)
 {
-	int i = 0;
+	int	i;
+
+	i = 0;
 	while (s[++i])
 	{
 		if (s[i] != 'n' || s[0] != '-')
@@ -13,10 +15,10 @@ int		is_n_flag(char *s)					// функция для корректной раб
 	return (1);
 }
 
-int ft_echo(t_all *all, int fd, char **arguments)
+int	ft_echo(t_all *all, int fd, char **arguments)
 {
-	int i;
-	int n;
+	int	i;
+	int	n;
 
 	i = 1;
 	n = 0;

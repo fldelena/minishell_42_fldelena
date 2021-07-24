@@ -1,8 +1,8 @@
 #include "../includes/minishell.h"
 
-int ft_exit(char **arguments)
+int	ft_exit(char **arguments)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (arguments[i])

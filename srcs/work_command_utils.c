@@ -19,6 +19,14 @@ char	**arr_copy(char **envp)
 	return (my_envp);
 }
 
+void	null_element(t_all *all, int i)
+{
+	all->env->envp[i] = NULL;
+	all->env->var[i] = NULL;
+	all->env->val[i] = NULL;
+	all->env->f_equal[i] = '\0';
+}
+
 void	make_envp(t_all *all, char **envp)
 {
 	char	**arr;
@@ -44,8 +52,5 @@ void	make_envp(t_all *all, char **envp)
 		free_arr(arr);
 		i++;
 	}
-	all->env->envp[i] = NULL;
-	all->env->var[i] = NULL;
-	all->env->val[i] = NULL;
-	all->env->f_equal[i] = '\0';
+	null_element(all, i);
 }

@@ -29,6 +29,17 @@ char	**del(char **var, char **envp, char **arguments, int words)
 	return (new_envp);
 }
 
+int	normi(char *arr)
+{
+	int	ret;
+
+	if (ft_strchr(arr, '='))
+		ret = 2;
+	else
+		ret = 1;
+	return (ret);
+}
+
 int	*del_f_equal(t_env *env, char **arguments, int words)
 {
 	int		*arr;
@@ -45,10 +56,7 @@ int	*del_f_equal(t_env *env, char **arguments, int words)
 		while (arguments[++j] != NULL)
 			if (strcmp(env->var[i], arguments[j]) == 0)
 				i++;
-		if (ft_strchr(env->envp[i], '='))
-			arr[k] = 2;
-		else
-			arr[k] = 1;
+		arr[k] = normi(env->envp[i]);
 		if (env->envp[i] == NULL)
 		{
 			arr[k] = '\0';
