@@ -15,7 +15,6 @@ SRC			=	minishell.c \
 				ft_export.c \
 				ft_unset.c \
 				mallocs.c \
-				pipe.c \
 				binary_work.c \
 				free.c \
 				open_redirect.c
@@ -31,7 +30,7 @@ OBJS		=	$(SRCS:.c=.o)
 LIBFT		=	libft.a
 
 CC			=	gcc
-CFLAGS		=	-g -Wall -Wextra -Werror
+CFLAGS		=	-g -Wall -Wextra -Werror # -fsanitize=address
 INCLUDES	=	-I libft/ -I includes/
 FTFLAGS		=	-lft
 

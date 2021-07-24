@@ -98,7 +98,7 @@ int	*add_f_equal(char **envp, int words)
 	int	i;
 
 	i = 0;
-	arr = malloc(sizeof(int) * words + 1);
+	arr = malloc(sizeof(int) * (words + 1));
 	while (envp[i] != '\0')
 	{
 		if (ft_strchr(envp[i], '='))

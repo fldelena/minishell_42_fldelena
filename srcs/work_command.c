@@ -61,11 +61,10 @@ char **ft_make_arg_n(char **arguments, t_all *all, int num) // с нормой �
 	}
 	else
 		count = tmp->next->start_arg;
-	arg_now = malloc(sizeof(char *) * count + 1);
+	arg_now = malloc(sizeof(char *) * (count + 1));
 	i = 0;
 	while (i != count)
 	{
-		// printf("%s\n",arguments[0]); 
 		arg_now[i] = arguments[i + count_tmp_arg];
 		i++;
 	}
@@ -123,23 +122,27 @@ int ft_work_command(char **arguments, t_all *all)
 		
 		while (tmp->next)
 		{
-			// printf("YA ZDESY %D\n",tmp->fd_redirect);
+			//printf("YA ZDESY %D\n",tmp->fd_redirect);
 			if (tmp->next != NULL)
 				pipe(tmp->fd_pid);
 			prev = tmp->prev;
 			if (tmp->f_red_pip == 2)
 			{
+				printf("YA ZDESY(1) num_list = %i ,fd = %D\n",tmp->num,tmp->fd_redirect);
 				close (tmp->fd_pid[1]);
 				tmp->fd_pid[1] = tmp->fd_redirect;
 				close(tmp->fd_pid[0]);
 			}
 			if (tmp->fd_redirect != -1 || tmp->f_red_pip >= 0) // было !=  не работало yes | head | wc
+			{
+				printf("YA ZDESY(2) num_list = %i ,fd = %D\n",tmp->num,tmp->fd_redirect);
 				tmp->pid = fork();
+			}
 			if (!tmp->pid )//&& tmp->f_red_pip == 2
 			{
-				
 				if (tmp->f_red_pip == 1 || tmp->f_red_pip == 2)  // если отдаём
 				{
+					printf("YA ZDESY(3) num_list = %i ,fd = %D\n",tmp->num,tmp->fd_redirect);
 					dup2(tmp->fd_pid[1], 1);
 					close(tmp->fd_pid[1]);
 					close(tmp->fd_pid[0]);
@@ -152,9 +155,9 @@ int ft_work_command(char **arguments, t_all *all)
 				}
 				ft_work_old(tmp->command, all);
 			}
-			if (tmp->f_red_pip >= 0 && tmp->f_red_pip != 2)
+			if (tmp->f_red_pip >= 0) // && tmp->f_red_pip != 2
 				close(tmp->fd_pid[1]);
-			if (prev && prev->f_red_pip >= 0 )
+			if (prev && prev->f_red_pip >= 0)
 				close(prev->fd_pid[0]);
 			tmp = tmp->next;
 		}

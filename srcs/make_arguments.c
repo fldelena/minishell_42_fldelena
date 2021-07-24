@@ -31,7 +31,7 @@ char	*cut_quote(char *arg)		// короче я хз как кейсы сверх
 
 	i = 0;
 	j = 0;
-	path = (char *)malloc(sizeof(char) * ft_strlen(arg));
+	path = (char *)malloc(sizeof(char) * (ft_strlen(arg) + 1));
 	while (arg[i])
 	{
 		if ((arg[i] == '"' || arg[i] == '\'')

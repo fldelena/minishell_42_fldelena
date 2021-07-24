@@ -6,17 +6,29 @@ void ft_correct_rir(t_all *all) // ls >> 1.txt >> 2.txt >> 3.txt
     t_lst_pipe *tmp_save;
     int save_reddirect;
 
+
+    // tmp = all->pipe;
+    // while(tmp->next)
+    // {
+    //     printf("%s -- %i  and flag_red_pip = %i\n", tmp->command[0], tmp->fd_redirect, tmp->f_red_pip);
+    //     tmp = tmp->next;
+    // }
+    // printf("\n");
+
     tmp = all->pipe;
-    while(tmp->next)
+    while(tmp->next)        // ls > a > b > c > d
     {
         tmp_save = tmp;
         save_reddirect = tmp->fd_redirect;
-        while (tmp_save->f_red_pip == 2 && (tmp_save->next->f_red_pip == 2 || \
-                    (tmp_save->prev && tmp_save->prev->f_red_pip == 2)) && tmp_save->fd_redirect != -1)
+        while((tmp_save->f_red_pip == 2 || tmp_save->f_red_pip == -10) && (tmp_save->next->f_red_pip == 2 || tmp_save->next->f_red_pip == -10) && tmp_save->fd_redirect != -1)
         {
-            close(save_reddirect);
-            save_reddirect = tmp_save->fd_redirect;
-            tmp_save->fd_redirect = -1;
+            if (tmp_save->next->next && tmp_save->next->next->f_red_pip == -10)
+            {
+                // printf("          +         fd_redirect close = %i\n", save_reddirect);
+                close(save_reddirect);
+                save_reddirect = tmp_save->next->fd_redirect;
+            }
+                tmp_save->fd_redirect = -1;
             tmp_save = tmp_save->next;
         }
         tmp->fd_redirect = save_reddirect;
@@ -26,7 +38,7 @@ void ft_correct_rir(t_all *all) // ls >> 1.txt >> 2.txt >> 3.txt
     // tmp = all->pipe;
     // while(tmp->next)
     // {
-    //     printf("%s -- %i\n", tmp->command[0], tmp->fd_redirect);
+    //     printf("%s -- %i  and flag_red_pip = %i\n", tmp->command[0], tmp->fd_redirect, tmp->f_red_pip);
     //     tmp = tmp->next;
     // }
     // exit(0);

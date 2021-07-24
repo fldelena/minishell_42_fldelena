@@ -30,15 +30,13 @@ int main(int argc, char *argv[], char **env)
 	}
 	close(fd1[1]);
 
-
-	// char *s;
 	// pid_t pid;
 	// pid = fork();
 	// if (!pid)
 	// 	exit(43);
 	// int status;
 	// waitpid(pid,&status,0);
-	// status = WEXITSTATUS(status);
+	// //status = WEXITSTATUS(status);
 	// printf("%d\n",status);	
 	
 }

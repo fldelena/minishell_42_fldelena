@@ -70,8 +70,6 @@ int main(int argc, char **argv, char **envp)
 	char **arguments;
 	t_all *all;
 
-	// signal(SIGINT,signal_h);
-	// signal(SIGKILL,signal_h);
 	m_str = 0;
 	arguments = NULL;
 	if (argc != 1) // не должен принимать никаких аргументов
