@@ -122,10 +122,7 @@ int main(int argc, char **argv, char **envp)
 		}
 		ft_open_redirect(all);
 		if (errno != 0)
-		{
-			printf("minishell: %s\n", strerror(errno));
 			continue ;
-		}
 		////////////////////
 		// t_lst_pipe *tmp;
 		// tmp = all->pipe;
