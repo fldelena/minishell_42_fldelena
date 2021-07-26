@@ -108,4 +108,12 @@ void	rl_replace_line();
 void	sigint_work(int sig);
 void	ctrl_d(int sig);
 void	sigquit_work(int sig);
+void	ft_correct_rir(t_all *all);
+void	ft_rewrite_arg_cat(t_lst_pipe *tmp);
+void	ft_two_red_arg_cat(t_lst_pipe *tmp);
+void	ft_reddir_right(t_lst_pipe *tmp);
+void	ft_red_left_one(t_lst_pipe *tmp);
+void	ft_red_left_double(t_lst_pipe *tmp);
+void	ft_for_norm(t_lst_pipe *tmp);
+
 #endif
