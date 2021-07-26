@@ -43,7 +43,7 @@ RM			=	rm -f
 all:		$(NAME)
 
 $(NAME):	$(OBJS) $(LIBFT)
-			$(CC) $(CFLAGS) $(INCLUDES) -o $(NAME) $(OBJS) -I includes/ -L . $(FTFLAGS) -lreadline
+			$(CC) $(CFLAGS) $(INCLUDES) -o $(NAME) $(OBJS) -I includes/ -L . $(FTFLAGS) -lreadline -L/Users/fldelena/.brew/Cellar/readline/8.1/lib/ -I/Users/fldelena/.brew/Cellar/readline/8.1/include
 
 $(LIBFT): libft/
 			@$(MAKE) -C libft/

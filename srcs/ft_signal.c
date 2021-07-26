@@ -1,14 +1,22 @@
 #include "../includes/minishell.h"
 
-void	signal_work(int sig)
+void	sigint_work(int sig)
 {
-	if (g_pid)
-	{
-		if (sig == SIGQUIT)
-			printf("quit\n");
-		kill(g_pid,sig);
-		g_pid = 0;
-	} else if ( sig == SIGINT)
-		write(1,"\nminishell:",11);
-
+	(void)sig;
+	printf("minishell:   \n");
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
 }
+
+
+void	ctrl_d(int sig)
+{
+	printf("minishell: exit\n");
+	exit(sig);
+}
+
+// void	sigquit_work(int sig)
+// {
+// 	(void) sig;
+// }

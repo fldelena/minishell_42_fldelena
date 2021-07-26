@@ -1,12 +1,6 @@
 #include "../includes/minishell.h"
 
 
-// void signal_h(int sig)
-// {
-// 	(void)sig;
-// 	if (g_pid )
-// 		return ;
-// }
 
 void print_error(char *command, int my_error)
 {
@@ -72,8 +66,10 @@ int main(int argc, char **argv, char **envp)
 
 	m_str = 0;
 	arguments = NULL;
-	signal(SIGINT, &signal_work);
-	signal(SIGQUIT, &signal_work);
+	signal(SIGINT, &sigint_work);
+	signal(SIGQUIT, SIG_IGN);
+	// if(!g_sig)
+	// 	signal(SIGQUIT, &sigquit_work);
 	if (argc != 1) // не должен принимать никаких аргументов
 	{
 		print_error(NULL, -1);
@@ -86,6 +82,8 @@ int main(int argc, char **argv, char **envp)
 		init_errno(all);
 		free_main(&m_str, arguments, all);
 		m_str = readline("minishell: ");
+		if (!m_str)
+			ctrl_d(131);
 		if (m_str[0] == '\0') // вывод ошибки чтения строки
 			continue;
 		add_history(m_str);

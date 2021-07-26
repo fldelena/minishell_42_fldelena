@@ -104,5 +104,8 @@ void	ft_end_rewrite(char *m2, char *m_str, int j_m, int j_str);
 void	ft_add_lst_2(t_lst_pipe *tmp, int c_pip, int count, int f_dir);
 void	ft_lst_null(t_lst_pipe **tmp, int *num2);
 void	ft_first(char *m_str, int *t_l_quote, int *o_l_quote, int *i);
-void	signal_work(int sig);
+void	rl_replace_line();
+void	sigint_work(int sig);
+void	ctrl_d(int sig);
+void	sigquit_work(int sig);
 #endif
