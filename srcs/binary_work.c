@@ -88,8 +88,6 @@ int	binary_work(t_all *all, char **arguments)
 		i++;
 	pathways = ft_split(all->env->val[i], ':');
 	i = ft_make_path(arguments, &pathway, pathways);
-	if (strncmp(arguments[0], "minishell", 9) == 0)
-		g_sig++;
 	if (all->pipe->next == NULL)
 	{
 		i = ft_launch(arguments, pathways, pathway, i);
