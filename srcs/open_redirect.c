@@ -71,12 +71,21 @@ int	ft_open_redirect(t_all *all)
 		{
 			if (tmp->count_red_pip == 1)
 				tmp->prev->fd_redirect = open(tmp->command[0], O_RDONLY, 0644);
-			// else
-			// {
-			// 	tmp->prev->fd_redirect = open("name_tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			// 	char *end_str = NULL;
-			// 	end_str = readline(">\n");
-			// }
+			else
+			{
+				tmp->prev->fd_redirect = open("name_tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+				char *end_str;
+				while (TRUE)
+				{
+					end_str = readline("> ");
+					if (ft_strncmp(end_str, tmp->command[0], ft_strlen(end_str)) == 0)
+						break ;
+					write(tmp->prev->fd_redirect, end_str, ft_strlen(end_str));
+					write(tmp->prev->fd_redirect, "\n", ft_strlen("\n"));
+					free(end_str);
+				}
+				free(end_str);
+			}
 			if (tmp->f_red_pip != 1)
 				tmp->f_red_pip = -10;
 			else
