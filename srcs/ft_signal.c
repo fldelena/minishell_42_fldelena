@@ -1,6 +1,6 @@
 #include "../includes/minishell.h"
 
-void sigint_work(int sig)
+void	sigint_work(int sig)
 {
 	(void)sig;
 	if (g_pid == 0)
@@ -12,13 +12,13 @@ void sigint_work(int sig)
 	rl_redisplay();
 }
 
-void ctrl_d(int sig)
+void	ctrl_d(int sig)
 {
 	printf("minishell: exit\n");
 	exit(sig);
 }
 
-void sigquit_work(int sig)
+void	sigquit_work(int sig)
 {
 	if (g_pid != 0)
 		printf("Quit: 3\n");
