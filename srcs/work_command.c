@@ -170,7 +170,10 @@ int	ft_work_command(char **arguments, t_all *all)
 		while (tmp->next)
 		{
 			if (tmp->fd_redirect != -1 || tmp->f_red_pip >= 0)
-				waitpid(tmp->pid, 0, 0);
+			{
+				waitpid(tmp->pid, &errno, 0);
+				errno = WEXITSTATUS(errno);
+			}
 			tmp = tmp->next;
 		}
 	}

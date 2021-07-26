@@ -16,9 +16,7 @@
 
 # define TRUE 1
 
-
 pid_t	g_pid;
-int		g_sig;
 // структура для окружения
 
 typedef struct s_env
@@ -37,12 +35,12 @@ typedef struct s_lst_pipe
 	char				**command;
 	int					fd_redirect;
 	int					fd_pid[2];
-	int					count_red_pip;		// сколько подряд пайпов или редиректов
-	int					f_red_pip;			// если пайп то 1 , если > или >> то = 2 | если < или << то 3
-	int					start_arg;			// на каком аргументе начинается пайп
-	int					num;				// положение листа в списке // delete me
-	struct s_lst_pipe	*next;				// следующий элемент списка
-	struct s_lst_pipe	*prev;				// предыдущий
+	int					count_red_pip;
+	int					f_red_pip;
+	int					start_arg;
+	int					num;
+	struct s_lst_pipe	*next;
+	struct s_lst_pipe	*prev;
 }				t_lst_pipe;
 
 typedef struct s_parser
@@ -104,7 +102,7 @@ void	ft_end_rewrite(char *m2, char *m_str, int j_m, int j_str);
 void	ft_add_lst_2(t_lst_pipe *tmp, int c_pip, int count, int f_dir);
 void	ft_lst_null(t_lst_pipe **tmp, int *num2);
 void	ft_first(char *m_str, int *t_l_quote, int *o_l_quote, int *i);
-void	rl_replace_line();
+void	rl_replace_line(char *s, int i);
 void	sigint_work(int sig);
 void	ctrl_d(int sig);
 void	sigquit_work(int sig);
