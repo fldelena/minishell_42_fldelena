@@ -6,8 +6,10 @@ void	ft_print_error_2(char *command, int my_error)
 		write(2, "minishell: syntax error near unexpected token `<<'\n", 51);
 	else if (my_error == 127)
 		printf("minishell: %s: command not found\n", command);
-	else if (my_error == 1)
+	else if (my_error == -9)
 		write(2, "minishell: Not valid\n", 21);
+	else if (my_error == 1)
+		return ;
 	else
 		printf("%s\n", strerror(errno));
 }

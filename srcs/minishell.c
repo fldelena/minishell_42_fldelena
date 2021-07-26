@@ -27,7 +27,7 @@ int	ft_work_with_m_str(t_all *all, char **m_str, char ***arguments)
 	errno = ft_check_command(m_str, all);
 	if (errno != 0)
 	{
-		print_error(m_str[0], errno);
+		print_error(m_str[0], -9);
 		return (1);
 	}
 	arguments[0] = ft_split(m_str[0], ';');

@@ -71,8 +71,9 @@ int	ft_launch(char **arguments, char **pathways, char *pathway, int i)
 	}
 	else
 		return (127);
-	waitpid(pidor, 0, 0);
-	return (0);
+	waitpid(pidor, &errno, 0);
+	errno = WEXITSTATUS(errno);
+	return (errno);
 }
 
 int	binary_work(t_all *all, char **arguments)
