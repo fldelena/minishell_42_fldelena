@@ -1,6 +1,6 @@
 #include "../includes/minishell.h"
 
-int exception(char **arguments)
+int	exception(char **arguments)
 {
 	if (ft_strncmp(arguments[0], "echo", ft_strlen("echo")) == 0)
 		return (1);
@@ -22,60 +22,81 @@ int exception(char **arguments)
 		return (0);
 }
 
-int ft_help(char *pathway)
+int	ft_help(char *pathway)
 {
-	struct stat buf;
+	struct stat	buf;
 
-	if (lstat(pathway, &buf) == -1) // собираем сведенья о файле
+	if (lstat(pathway, &buf) == -1)
 		errno = 0;
-	if ((buf.st_mode & S_IFMT) == S_IFREG) // это ультромега не правильно, но работает
-		return (1);						   // найдя нужный нам путь мы выходим
+	if ((buf.st_mode & S_IFMT) == S_IFREG)
+		return (1);
 	return (0);
 }
 
-int binary_work(t_all *all, char **arguments)
+int	ft_make_path(char **arguments, char **pathway, char **pathways)
 {
-	char **pathways; // массив из разных путей взятых из PATH
-	char *pathway;	 // сюда я сохряняю путь по одному на каждую итерацию
-	pid_t pidor;
-	int i;
+	int	i;
 
 	i = 0;
-	if (exception(arguments) == 1)
-		return (0);
-	while (ft_strncmp(all->env->var[i], "PATH", ft_strlen("PATH")) != 0) // ищем PATH
-		i++;
-	pathways = ft_split(all->env->val[i], ':'); // делим PATH на разные пути
-	i = 0;
-	while (pathways[i] != NULL) // перебираем пути пока не найдем тот в котором лежит наш аргумент
+	while (pathways[i] != NULL)
 	{
-		pathway = ft_strdup(pathways[i]);			 // копируем в отдельную переменную
-		pathway = ft_strjoin(pathway, "/");			 // прямо по кусочкам собираем путь
-		pathway = ft_strjoin(pathway, arguments[0]); // и добавляем название файла
-		if (ft_help(pathway) == 1)
-			break;
-		free(pathway); // картофель free
+		pathway[0] = ft_strdup(pathways[i]);
+		pathway[0] = ft_strjoin(pathway[0], "/");
+		pathway[0] = ft_strjoin(pathway[0], arguments[0]);
+		if (ft_help(pathway[0]) == 1)
+			break ;
+		free(pathway[0]);
 		i++;
 	}
-	if (all->pipe->next == NULL)
+	return (i);
+}
+
+int	ft_launch(char **arguments, char **pathways, char *pathway, int i)
+{
+	pid_t	pidor;
+
+	if (pathways[i] != NULL)
 	{
 		pidor = fork();
 		g_pid = pidor;
 		if (!pidor)
-		{
-			if (pathways[i] != NULL)
-				execve(pathway, arguments, 0); // запускаем нашу программку
-			else if (ft_help(arguments[0]))
-				execve(arguments[0], arguments, 0);
-			else
-				return (127);
-		}
-		waitpid(pidor, 0, 0);
+			execve(pathway, arguments, 0);
+	}
+	else if (ft_help(arguments[0]))
+	{
+		pidor = fork();
+		g_pid = pidor;
+		if (!pidor)
+			execve(arguments[0], arguments, 0);
 	}
 	else
+		return (127);
+	waitpid(pidor, 0, 0);
+	return (0);
+}
+
+int	binary_work(t_all *all, char **arguments)
+{
+	char	**pathways;
+	char	*pathway;
+	int		i;
+
+	i = 0;
+	if (exception(arguments) == 1)
+		return (0);
+	while (ft_strncmp(all->env->var[i], "PATH", ft_strlen("PATH")) != 0)
+		i++;
+	pathways = ft_split(all->env->val[i], ':');
+	i = ft_make_path(arguments, &pathway, pathways);
+	if (strncmp(arguments[0], "minishell", 9) == 0)
+		g_sig++;
+	if (all->pipe->next == NULL)
 	{
-		execve(pathway, arguments, 0); // запускаем нашу программку
+		i = ft_launch(arguments, pathways, pathway, i);
+		if (i != 0)
+			return (i);
 	}
-	// execve(arguments[0], arguments, 0);
+	else
+		execve(pathway, arguments, 0);
 	return (errno);
 }
