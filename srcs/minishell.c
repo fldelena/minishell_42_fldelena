@@ -77,6 +77,7 @@ int main(int argc, char **argv, char **envp)
 	make_envp(all, envp);
 	while (TRUE)
 	{
+		unlink("name_tmp");
 		g_pid = 0;
 		init_errno(all);
 		free_main(&m_str, arguments, all);

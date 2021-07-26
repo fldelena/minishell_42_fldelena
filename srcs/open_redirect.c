@@ -46,6 +46,52 @@ void	ft_correct_rir(t_all *all)
     */
 }
 
+void	ft_rewrite_arg_cat(t_lst_pipe *tmp)
+{
+	int 	i;
+	int		j;
+	char	**new_com;
+
+	i = 0;
+	j = 0;
+	while (tmp->command[i] != NULL)
+		i++;
+	new_com = malloc(sizeof(char *) * (i + 2));
+	i = 0;
+	while (tmp->command[i] != NULL)
+	{
+		new_com[i] = tmp->command[i];
+		i++;
+	}
+	while (tmp->next->command[j] != NULL)
+		j++;
+	new_com[i] = ft_strdup(tmp->next->command[j - 1]);
+	new_com[i + 1] = NULL;
+	free(tmp->command);
+	tmp->command = new_com;
+}
+
+void	ft_two_red_arg_cat(t_lst_pipe *tmp)
+{
+	int 	i;
+	char	**new_com;
+
+	i = 0;
+	while (tmp->command[i] != NULL)
+		i++;
+	new_com = malloc(sizeof(char *) * (i + 2));
+	i = 0;
+	while (tmp->command[i] != NULL)
+	{
+		new_com[i] = tmp->command[i];
+		i++;
+	}
+	new_com[i] = ft_strdup("name_tmp\0");
+	new_com[i + 1] = NULL;
+	free(tmp->command);
+	tmp->command = new_com;
+}
+
 int	ft_open_redirect(t_all *all)
 {
 	t_lst_pipe	*tmp;
@@ -70,7 +116,12 @@ int	ft_open_redirect(t_all *all)
 		if (tmp->prev != NULL && (tmp->prev->f_red_pip == 3))
 		{
 			if (tmp->count_red_pip == 1)
-				tmp->prev->fd_redirect = open(tmp->command[0], O_RDONLY, 0644);
+			{
+				if (ft_strncmp(tmp->prev->command[0], "cat", ft_strlen(tmp->prev->command[0])) == 0)
+					ft_rewrite_arg_cat(tmp->prev);
+				else
+					tmp->prev->fd_redirect = open(tmp->command[0], O_RDONLY, 0644);
+			}
 			else
 			{
 				tmp->prev->fd_redirect = open("name_tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
@@ -85,6 +136,8 @@ int	ft_open_redirect(t_all *all)
 					free(end_str);
 				}
 				free(end_str);
+				if (ft_strncmp(tmp->prev->command[0], "cat", ft_strlen(tmp->prev->command[0])) == 0)
+					ft_two_red_arg_cat(tmp->prev);
 			}
 			if (tmp->f_red_pip != 1)
 				tmp->f_red_pip = -10;
