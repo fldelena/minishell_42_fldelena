@@ -1,7 +1,5 @@
 #include "../includes/minishell.h"
 
-
-
 void print_error(char *command, int my_error)
 {
 	if (my_error > 0)
@@ -67,7 +65,7 @@ int main(int argc, char **argv, char **envp)
 	m_str = 0;
 	arguments = NULL;
 	signal(SIGINT, &sigint_work);
-	signal(SIGQUIT, SIG_IGN);
+	signal(SIGQUIT, &sigquit_work);
 	if (argc != 1) // не должен принимать никаких аргументов
 	{
 		print_error(NULL, -1);
@@ -120,7 +118,7 @@ int main(int argc, char **argv, char **envp)
 		}
 		ft_open_redirect(all);
 		if (errno != 0)
-			continue ;
+			continue;
 		////////////////////
 		// t_lst_pipe *tmp;
 		// tmp = all->pipe;
