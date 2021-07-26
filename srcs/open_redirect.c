@@ -62,7 +62,7 @@ int	ft_open_redirect(t_all *all)
 			else
 				tmp->prev->fd_redirect = \
 					open(tmp->command[0], O_WRONLY | O_CREAT | O_APPEND, 0644);
-			if (tmp->f_red_pip != 1)		// вынести ещё ниже
+			if (tmp->f_red_pip != 1)		// вынести ещё ниже тк повторяется
 				tmp->f_red_pip = -10;
 			else
 				tmp->f_red_pip = -1;

@@ -37,13 +37,14 @@ CC			=	gcc
 CFLAGS		=	-g -Wall -Wextra -Werror # -fsanitize=address
 INCLUDES	=	-I libft/ -I includes/
 FTFLAGS		=	-lft
+FLAG_signal = -lreadline -L/Users/gvenonat/.brew/Cellar/readline/8.1/lib/ -I/Users/gvenonat/.brew/Cellar/readline/8.1/include
 
 RM			=	rm -f
 
 all:		$(NAME)
 
 $(NAME):	$(OBJS) $(LIBFT)
-			$(CC) $(CFLAGS) $(INCLUDES) -o $(NAME) $(OBJS) -I includes/ -L . $(FTFLAGS) -lreadline -L/Users/fldelena/.brew/Cellar/readline/8.1/lib/ -I/Users/fldelena/.brew/Cellar/readline/8.1/include
+			$(CC) $(CFLAGS) $(INCLUDES) -o $(NAME) $(OBJS) -I includes/ -L . $(FTFLAGS) $(FLAG_signal)
 
 $(LIBFT): libft/
 			@$(MAKE) -C libft/
