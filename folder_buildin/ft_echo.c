@@ -2,10 +2,10 @@
 
 int	is_n_flag(char *s)
 {
-	if (!s)
-		return (0);
 	int	i;
 
+	if (!s)
+		return (0);
 	i = 0;
 	while (s[++i])
 	{

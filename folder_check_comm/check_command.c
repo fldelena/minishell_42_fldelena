@@ -2,14 +2,15 @@
 
 void	ft_first(char *m_str, int *t_l_quote, int *o_l_quote, int *i)
 {
-	if ((m_str[*i] == '"' && *t_l_quote == 0 && (*i > 0 && m_str[*i - 1] != '\\') \
-				&& *o_l_quote == 0) || (m_str[*i] == '"' && *i == 0))
+	if ((m_str[*i] == '"' && *t_l_quote == 0 && \
+		(*i > 0 && m_str[*i - 1] != '\\') \
+		&& *o_l_quote == 0) || (m_str[*i] == '"' && *i == 0))
 	{
 		(*t_l_quote)++;
 		(*i)++;
 	}
-	if ((m_str[*i] == '\'' && *o_l_quote == 0 && (i > 0 && m_str[*i - 1] != '\\') \
-				&& *t_l_quote == 0) || (m_str[*i] == '"' && *i == 0))
+	if ((m_str[*i] == '\'' && *o_l_quote == 0 && (i > 0 && m_str[*i - 1] \
+		!= '\\') && *t_l_quote == 0) || (m_str[*i] == '"' && *i == 0))
 	{
 		(*o_l_quote)++;
 		(*i)++;

@@ -52,8 +52,9 @@ int	ft_count_env(char *m_str, int *i, int l_dollar)
 	}
 	else
 	{
-		while (m_str[*i] != '\0' && m_str[*i] != ' ' && m_str[*i] != ',' && m_str[*i] != '"' \
-				&& m_str[*i] != '\'' && m_str[*i] != '-' && m_str[*i] != '_')
+		while (m_str[*i] != '\0' && m_str[*i] != ' ' && m_str[*i] != ',' && \
+			m_str[*i] != '"' && m_str[*i] != '\'' && m_str[*i] != '-' \
+			&& m_str[*i] != '_')
 		{
 			(*i)++;
 			count++;
