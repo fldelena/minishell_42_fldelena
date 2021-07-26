@@ -68,8 +68,6 @@ int main(int argc, char **argv, char **envp)
 	arguments = NULL;
 	signal(SIGINT, &sigint_work);
 	signal(SIGQUIT, SIG_IGN);
-	// if(!g_sig)
-	// 	signal(SIGQUIT, &sigquit_work);
 	if (argc != 1) // не должен принимать никаких аргументов
 	{
 		print_error(NULL, -1);
@@ -79,6 +77,7 @@ int main(int argc, char **argv, char **envp)
 	make_envp(all, envp);
 	while (TRUE)
 	{
+		g_pid = 0;
 		init_errno(all);
 		free_main(&m_str, arguments, all);
 		m_str = readline("minishell: ");

@@ -3,7 +3,10 @@
 void	sigint_work(int sig)
 {
 	(void)sig;
-	printf("minishell:   \n");
+	if (g_pid == 0)
+		printf("minishell:   \n");
+    else
+		printf("\n");
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
@@ -16,7 +19,8 @@ void	ctrl_d(int sig)
 	exit(sig);
 }
 
-// void	sigquit_work(int sig)
-// {
-// 	(void) sig;
-// }
+void	sigquit_work(int sig)
+{
+	printf("^\\Quit: 3\n");
+	exit(sig);
+}
