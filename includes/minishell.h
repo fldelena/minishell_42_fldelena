@@ -117,5 +117,9 @@ void	ft_reddir_right(t_lst_pipe *tmp);
 void	ft_red_left_one(t_lst_pipe *tmp);
 void	ft_red_left_double(t_lst_pipe *tmp);
 void	ft_for_norm(t_lst_pipe *tmp);
+void	ft_print_error_2(char *command, int my_error);
+void	print_error(char *command, int my_error);
+void	init_errno(t_all *all);
+void	ft_launch_arg_n(t_all *all, char **arguments);
 
 #endif

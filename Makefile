@@ -14,7 +14,8 @@ SRC			=	minishell.c \
 				open_redirect.c \
 				ft_signal.c	\
 				open_redirect_utils.c \
-				work_comm_utils_2.c
+				work_comm_utils_2.c \
+				minishell_utils.c
 
 PARSER_FILE	=	check_command.c \
 				dollar_main.c \
