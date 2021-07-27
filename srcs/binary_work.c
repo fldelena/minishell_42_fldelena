@@ -85,8 +85,11 @@ int	binary_work(t_all *all, char **arguments)
 	i = 0;
 	if (exception(arguments) == 1)
 		return (0);
-	while (ft_strncmp(all->env->var[i], "PATH", ft_strlen("PATH")) != 0)
+	while (all->env->var[i] && \
+		ft_strncmp(all->env->var[i], "PATH", ft_strlen("PATH")) != 0)
 		i++;
+	if (!all->env->var[i])
+        return (127);
 	pathways = ft_split(all->env->val[i], ':');
 	i = ft_make_path(arguments, &pathway, pathways);
 	if (all->pipe->next == NULL)
