@@ -7,9 +7,7 @@ int	ft_exit(char **arguments)
 	i = 0;
 	while (arguments[i])
 		i++;
-	if (i > 2)
-		return (-1);
-	else if (i == 2)
+	if (i > 1)
 	{
 		printf("exit\n");
 		if (arguments[1][0] < '0' || arguments[1][0] > '9')
