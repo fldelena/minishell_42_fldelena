@@ -25,7 +25,7 @@ char	*ft_help2(char *m_str, int *i, int count)
 	j = 0;
 	now_env = malloc(count + 1);
 	while (m_str[*i - count] != '\0' && m_str[*i - count] != ' ' \
-			&& m_str[*i - count] != '"')
+			&& m_str[*i - count] != '"' && m_str[*i - count] != '.')
 	{
 		now_env[j] = m_str[*i - count];
 		j++;
@@ -54,7 +54,7 @@ int	ft_count_env(char *m_str, int *i, int l_dollar)
 	{
 		while (m_str[*i] != '\0' && m_str[*i] != ' ' && m_str[*i] != ',' && \
 			m_str[*i] != '"' && m_str[*i] != '\'' && m_str[*i] != '-' \
-			&& m_str[*i] != '_')
+			&& m_str[*i] != '_' && m_str[*i] != '.')
 		{
 			(*i)++;
 			count++;

@@ -39,7 +39,8 @@ void	line_sort(char **envp)
 		j = 0;
 		while (j < count - i)
 		{
-			if (strcmp(*(envp + j), *(envp + j + 1)) > 0)
+			if (ft_strncmp(*(envp + j), *(envp + j + 1), \
+				ft_strlen(*(envp + j))) > 0)
 			{
 				str = envp[j];
 				envp[j] = envp[j + 1];

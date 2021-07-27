@@ -31,7 +31,8 @@ int	find_env_in_all(t_all *all, char *now_env)
 	i = 0;
 	while (all->env->var[i])
 	{
-		if (strcmp(all->env->var[i], now_env) == 0)
+		if (ft_strncmp(all->env->var[i], now_env, \
+				ft_strlen(now_env)) == 0)
 			break ;
 		i++;
 	}
