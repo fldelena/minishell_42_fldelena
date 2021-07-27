@@ -12,20 +12,6 @@ void	ft_help_cut(char ***arguments)
 	}
 }
 
-int	ft_check_line(char *m_str)
-{
-	int	i;
-
-	i = 0;
-	while(m_str[i] != '\0')
-	{
-		if (m_str[i] != ';' && m_str[i] != ' ' && m_str[i] != '\t')
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
 int	ft_work_with_m_str(t_all *all, char **m_str, char ***arguments)
 {
 	if (!m_str[0])

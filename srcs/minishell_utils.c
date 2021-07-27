@@ -76,3 +76,17 @@ void	ft_launch_arg_n(t_all *all, char **arguments)
 		k++;
 	}
 }
+
+int	ft_check_line(char *m_str)
+{
+	int	i;
+
+	i = 0;
+	while (m_str[i] != '\0')
+	{
+		if (m_str[i] != ';' && m_str[i] != ' ' && m_str[i] != '\t')
+			return (0);
+		i++;
+	}
+	return (1);
+}

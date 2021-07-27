@@ -85,6 +85,7 @@ int		ft_exit(char **arguments);
 int		ft_count_last_lst(char **arguments, int count);
 int		ft_make_help(t_all *all, char **arguments, int *count, int num);
 int		ft_work_old(char **arg_now, t_all *all);
+int		ft_check_line(char *m_str);
 char	*cut_quote(char *arg);
 char	*ft_help1(char *m_str, int *i, int count);
 char	*ft_help2(char *m_str, int *i, int count);
