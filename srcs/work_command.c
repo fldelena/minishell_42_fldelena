@@ -46,7 +46,8 @@ void	ft_tmp_pid(t_all *all, t_lst_pipe *tmp, t_lst_pipe *prev)
 			close(prev->fd_pid[0]);
 			close(prev->fd_pid[1]);
 		}
-		ft_work_old(tmp->command, all);
+		if (ft_work_old(tmp->command, all) != 0)
+			exit(0);
 	}
 }
 
